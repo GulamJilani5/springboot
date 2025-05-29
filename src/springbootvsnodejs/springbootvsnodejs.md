@@ -35,7 +35,7 @@
     •Service → runs the business logic
     •Model → interacts with the database
 
-### Example Flow
+### Example Flow in NodeJS(ExpressJS)
 ##### A `GET /users/:id` request would flow like:
 
 ✅ **Client Request**  
