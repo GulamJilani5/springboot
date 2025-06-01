@@ -139,10 +139,29 @@
 
 ---
 
+## 11. @Bean
+- **Purpose** : Declares a bean manually in a @Configuration class. Spring will manage the returned object
+      as a Spring bean. Used when you want more control over the bean creation (e.g., setting custom 
+      properties or using third-party classes not annotated with @Component, @Service, etc.).
+
+  - **Usage**:
+  ```Java
+  @Configuration
+    public class AppConfig {
+  
+        @Bean
+        public RestTemplate restTemplate() {
+            return new RestTemplate();
+        }
+    }
+  ```
+- **Interview Tip** : Be ready to explain the difference between @Bean and @Component.
+ - @Component is auto-detected via component scanning.
+ - @Bean is declared manually in a Java config class (@Configuration).
 
 
 
-## 11. @Value
+## 12. @Value
 - **Purpose**: Injects values from application properties (`application.properties` or `application.yml`) into fields.
 - **Usage**:
   ```java
@@ -152,7 +171,7 @@
 
 ---
 
-## 12. @Configuration
+## 13. @Configuration
 - **Purpose**: Marks a class as a source of Spring bean definitions.
 - Often used for defining beans manually using `@Bean`.
 - **Usage**:
@@ -168,7 +187,7 @@
 
 ---
 
-## 13. @EnableAutoConfiguration
+## 14. @EnableAutoConfiguration
 - **Purpose**: Tells Spring Boot to automatically configure beans based on the classpath and properties.
 - **Note**: Already included in `@SpringBootApplication`, but knowing it helps during interviews.
 - **Usage**:
@@ -179,7 +198,7 @@
 
 ---
 
-## 14. @EnableScheduling
+## 15. @EnableScheduling
 - **Purpose**: Enables Spring's scheduled task execution capability.
 - **Usage**:
   ```java
@@ -198,7 +217,7 @@
 
 ---
 
-## 15. @Transactional
+## 16. @Transactional
 - **Purpose**: Manages transactions declaratively. It ensures a method runs inside a transaction.
 - Prevents partial data commits if something fails.
 - **Usage**:
