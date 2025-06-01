@@ -138,3 +138,78 @@
   ```
 
 ---
+
+
+
+
+## 11. @Value
+- **Purpose**: Injects values from application properties (`application.properties` or `application.yml`) into fields.
+- **Usage**:
+  ```java
+  @Value("${server.port}")
+  private int serverPort;
+  ```
+
+---
+
+## 12. @Configuration
+- **Purpose**: Marks a class as a source of Spring bean definitions.
+- Often used for defining beans manually using `@Bean`.
+- **Usage**:
+  ```java
+  @Configuration
+  public class AppConfig {
+      @Bean
+      public MyService myService() {
+          return new MyService();
+      }
+  }
+  ```
+
+---
+
+## 13. @EnableAutoConfiguration
+- **Purpose**: Tells Spring Boot to automatically configure beans based on the classpath and properties.
+- **Note**: Already included in `@SpringBootApplication`, but knowing it helps during interviews.
+- **Usage**:
+  ```java
+  @EnableAutoConfiguration
+  public class MyApp { }
+  ```
+
+---
+
+## 14. @EnableScheduling
+- **Purpose**: Enables Spring's scheduled task execution capability.
+- **Usage**:
+  ```java
+  @Configuration
+  @EnableScheduling
+  public class SchedulerConfig { }
+
+  @Component
+  public class MyScheduler {
+      @Scheduled(fixedRate = 5000)
+      public void runEveryFiveSeconds() {
+          System.out.println("Running scheduled task...");
+      }
+  }
+  ```
+
+---
+
+## 15. @Transactional
+- **Purpose**: Manages transactions declaratively. It ensures a method runs inside a transaction.
+- Prevents partial data commits if something fails.
+- **Usage**:
+  ```java
+  @Service
+  public class MyService {
+      @Transactional
+      public void performDatabaseOperation() {
+          // DB logic here
+      }
+  }
+  ```
+
+---
