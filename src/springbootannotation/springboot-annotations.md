@@ -144,7 +144,7 @@
       as a Spring bean. Used when you want more control over the bean creation (e.g., setting custom 
       properties or using third-party classes not annotated with @Component, @Service, etc.).
 
-  - **Usage**:
+- **Usage**:
   ```Java
   @Configuration
     public class AppConfig {
