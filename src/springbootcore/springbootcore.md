@@ -25,5 +25,6 @@ ORM is a technique that allows you to map Java objects to database tables. In Ja
 
 **🧪 Example:**
     Using JPA annotations like @Entity, @Table, @Column, etc., lets the ORM framework handle SQL under the hood:
+
 **🧰 Use Case:**
 ORM eliminates boilerplate SQL code. It enables CRUD operations using Java methods, improves productivity, and supports lazy loading, cascading, etc.
