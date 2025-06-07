@@ -65,9 +65,9 @@ the other side (where `@JoinColumn` or `@JoinTable` is defined).
 - Course is the inverse side (uses `mappedBy`).
   
 **Owning Side**: The owning side is the one that defines the join column or join table, and hence 
-                  controls the relationship in the database (i.e., manages the foreign key).
+controls the relationship in the database (i.e., manages the foreign key).    
 **Inverse Side**: The inverse side(the one using mappedBy) is simply mapped to the owning side and does not
-                  manage the foreign key column.
+ manage the foreign key column.
 
 ### 🔁 Real-world Analogy
 - `@JoinTable` = "I’ll create the connection between A and B."
