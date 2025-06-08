@@ -60,13 +60,12 @@ A DTO is a plain Java object used to carry data between layers (e.g., from the c
 - Can include validation annotations like `@NotNull`, `@Size`, etc.
 
 **🧪 Example**:
-`java
-    public class UserDTO {
-        private String name;
-        private String email;
-        // getters and setters
-    }
-`
+   
+        public class UserDTO {
+            private String name;
+            private String email;
+            // getters and setters
+        }
 
 --- 
 
