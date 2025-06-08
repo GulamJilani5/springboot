@@ -19,28 +19,28 @@
 
 # ✅Example Project Structure for a Complex App
 
-`src/
-└── main/
-├── java/
-│   └── com/example/app/
-│       ├── config/
-│       ├── controller/
-│       ├── dto/
-│       ├── exception/
-│       ├── mapper/
-│       ├── model/
-│       ├── repository/
-│       ├── security/
-│       ├── service/
-│       ├── util/
-│       ├── constants/
-│       ├── enums/
-│       └── Application.java
-└── resources/
-├── application.yml
-├── static/
-└── templates/
-`
+        src/
+        └── main/
+        ├── java/
+        │   └── com/example/app/
+        │       ├── config/
+        │       ├── controller/
+        │       ├── dto/
+        │       ├── exception/
+        │       ├── mapper/
+        │       ├── model/
+        │       ├── repository/
+        │       ├── security/
+        │       ├── service/
+        │       ├── util/
+        │       ├── constants/
+        │       ├── enums/
+        │       └── Application.java
+        └── resources/
+        ├── application.yml
+        ├── static/
+        └── templates/
+
 
 # 🆚 DTO vs Mapper in Spring Boot
 
@@ -70,13 +70,13 @@ A DTO is a plain Java object used to carry data between layers (e.g., from the c
 
 --- 
 
-# 🔄 Mapper
+## 🔄 Mapper
 
-## Purpose:
+#### Purpose:
   A **Mapper** is a component used to **convert between entities and DTOs** (or between different 
   types of DTOs). This keeps your service and controller code clean and separated from conversion logic.
 
-## 🔑 Key Points:
+#### 🔑 Key Points:
 - Acts as a **bridge** between your entity and DTO.
 - You can write it **manually** or use tools like **MapStruct**, **ModelMapper**, etc.
 - Encourages **Separation of Concerns**.
