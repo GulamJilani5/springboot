@@ -51,6 +51,8 @@
 ## 4. @GetMapping / @PostMapping / @PutMapping / @DeleteMapping
 - **Purpose**: Shortcut for `@RequestMapping(method = ...)`.
 - Used to handle specific HTTP methods.
+- e.g:  **@RequestMapping**(`"/example"`)
+- e.g:  **@RequestMapping**(`value = "/example", method = RequestMethod.GET`)
 - **Usage**:
   ```java
   @GetMapping("/users")
