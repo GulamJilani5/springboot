@@ -17,54 +17,7 @@
 
 ---
 
-## 2. @RestController
-- **Purpose**: Combines `@Controller` and `@ResponseBody`.
-- Used to define a controller where methods return JSON or XML directly.
-- **Usage**:
-  ```java
-  @RestController
-  public class MyController {
-      @GetMapping("/hello")
-      public String sayHello() {
-          return "Hello!";
-      }
-  }
-  ```
-
----
-
-## 3. @RequestMapping
-- **Purpose**: Maps HTTP requests to handler methods.
-- Can be used at class or method level.
-- **Usage**:
-  ```java
-  @RequestMapping("/api")
-  public class ApiController {
-      @RequestMapping("/hello")
-      public String hello() {
-          return "Hello API!";
-      }
-  }
-  ```
-
----
-
-## 4. @GetMapping / @PostMapping / @PutMapping / @DeleteMapping
-- **Purpose**: Shortcut for `@RequestMapping(method = ...)`.
-- Used to handle specific HTTP methods.
-- e.g:  **@RequestMapping**(`"/example"`)
-- e.g:  **@RequestMapping**(`value = "/example", method = RequestMethod.GET`)
-- **Usage**:
-  ```java
-  @GetMapping("/users")
-  public List<User> getUsers() {
-      // Logic here
-  }
-  ```
-
----
-
-## 5. @Autowired
+## 2. @Autowired
 - **Purpose**: Injects dependencies automatically (like services or repositories).
 - **Usage**:
   ```java
@@ -82,7 +35,7 @@
 
 ---
 
-## 6. @Component / @Service / @Repository / @Controller
+## 3. @Component / @Service / @Repository / @Controller
 - **Purpose**: Marks a class as a Spring bean.
   - `@Component`: Generic stereotype.
   - `@Service`: For service layer.
@@ -91,43 +44,9 @@
 
 ---
 
-## 7. @PathVariable
-- **Purpose**: Binds URL path parameters to method arguments.
-- **Usage**:
-  ```java
-  @GetMapping("/users/{id}")
-  public User getUser(@PathVariable Long id) {
-      // Logic here
-  }
-  ```
 
----
 
-## 8. @RequestParam
-- **Purpose**: Extracts query parameters from the request.
-- **Usage**:
-  ```java
-  @GetMapping("/search")
-  public String search(@RequestParam String keyword) {
-      // Logic here
-  }
-  ```
-
----
-
-## 9. @RequestBody
-- **Purpose**: Maps the body of the HTTP request to a Java object.
-- **Usage**:
-  ```java
-  @PostMapping("/users")
-  public User createUser(@RequestBody User user) {
-      // Logic here
-  }
-  ```
-
----
-
-## 10. @Entity
+## 4. @Entity
 - **Purpose**: Marks a class as a JPA entity (used for database mapping).
 - **Usage**:
   ```java
@@ -142,7 +61,7 @@
 
 ---
 
-## 11. @Bean
+## 5. @Bean
 - **Purpose** : Declares a bean manually in a @Configuration class. Spring will manage the returned object
       as a Spring bean. Used when you want more control over the bean creation (e.g., setting custom 
       properties or using third-party classes not annotated with @Component, @Service, etc.).
@@ -164,7 +83,7 @@
 
 
 
-## 12. @Value
+## 6. @Value
 - **Purpose**: Injects values from application properties (`application.properties` or `application.yml`) into fields.
 - **Usage**:
   ```java
@@ -174,7 +93,7 @@
 
 ---
 
-## 13. @Configuration
+## 7. @Configuration
 - **Purpose**: Marks a class as a source of Spring bean definitions.
 - Often used for defining beans manually using `@Bean`.
 - **Usage**:
@@ -190,7 +109,7 @@
 
 ---
 
-## 14. @EnableAutoConfiguration
+## 8. @EnableAutoConfiguration
 - **Purpose**: Tells Spring Boot to automatically configure beans based on the classpath and properties.
 - **Note**: Already included in `@SpringBootApplication`, but knowing it helps during interviews.
 - **Usage**:
@@ -201,7 +120,7 @@
 
 ---
 
-## 15. @EnableScheduling
+## 9. @EnableScheduling
 - **Purpose**: Enables Spring's scheduled task execution capability.
 - **Usage**:
   ```java
@@ -220,7 +139,7 @@
 
 ---
 
-## 16. @Transactional
+## 10. @Transactional
 - **Purpose**: Manages transactions declaratively. It ensures a method runs inside a transaction.
 - Prevents partial data commits if something fails.
 - **Usage**:
@@ -235,3 +154,10 @@
   ```
 
 ---
+
+
+## 11. @Qualifier
+- When you have multiple beans of the same type, Spring doesn't know which one to inject using **@Autowired**.
+- **@Qualifier** specifies which bean to inject by name.
+
+
