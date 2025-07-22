@@ -22,8 +22,9 @@ The Config Client is the **microservice** or **Spring Boot** application that co
 |  (order-service)     |       | Server                 |
 |                      |       | (reads from Git)       |
 +----------------------+       +------------------------+
-                                         |
-                                         v
-                            +-----------------------------------+
-                            |  Git Repo or File System or Vault |
-                            +-----------------------------------+
+|
+v
++-----------------------------------+
+|  Git Repo or File System or Vault |
++-----------------------------------+
+
