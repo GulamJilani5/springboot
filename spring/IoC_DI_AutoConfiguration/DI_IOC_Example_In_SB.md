@@ -63,7 +63,7 @@ public class OrderController {
 }
 ```
 
-When we run the Spring Boot application and send a POST request to /orders/place?amount=100, the IoC container ensures that:
+When we run the Spring Boot application and send a POST request to `/orders/place?amount=100`, the **IoC container** ensures that:
 
 - An **OrderService** bean is created with a **PaymentService** dependency injected.
 - The **OrderController** is created with the **OrderService** injected.
@@ -87,4 +87,78 @@ public class OrderService {
 }
 ```
 
-Here, the @Autowired annotation tells the Spring IoC container to inject a PaymentService bean directly into the paymentService field. The container resolves the dependency at runtime.
+Here, the `@Autowired` annotation tells the **Spring IoC container** to inject a **PaymentService** bean directly into the **paymentService** field. The container resolves the dependency at runtime.
+
+---
+
+# Example 3: Component Scanning and Bean Configuration
+
+- When we annotate a class with @Component, @Service, @Repository, or @Controller, Spring automatically detects it during component scanning and registers it as a bean in the IoC container.
+
+For example **repository** for database access:
+
+```java
+@Repository
+public class OrderRepository {
+    public void saveOrder(String orderDetails) {
+        // Simulate saving to a database
+        System.out.println("Saving order: " + orderDetails);
+    }
+}
+```
+
+And a service that depends on it:
+
+```java
+@Service
+public class OrderService {
+    private final OrderRepository orderRepository;
+    private final PaymentService paymentService;
+
+    public OrderService(OrderRepository orderRepository, PaymentService paymentService) {
+        this.orderRepository = orderRepository;
+        this.paymentService = paymentService;
+    }
+
+    public String placeOrder(double amount, String orderDetails) {
+        orderRepository.saveOrder(orderDetails);
+        return paymentService.processPayment(amount);
+    }
+}
+
+```
+
+When the Spring Boot application starts:
+
+- The IoC container scans for `@Repository`, `@Service`, and other annotations.
+- It creates beans for **OrderRepository**, **PaymentService**, and **OrderService**.
+- It injects **OrderRepository** and **PaymentService** into **OrderService** via constructor injection.
+
+---
+
+# Example 4: Configuring Beans Explicitly
+
+Sometimes, we need to define beans explicitly (e.g., for third-party libraries or custom configurations). We can use a `@Configuration` class:
+
+```java
+@Configuration
+public class AppConfig {
+
+    @Bean
+    public PaymentService paymentService() {
+        return new CreditCardPaymentService();
+    }
+
+    @Bean
+    public OrderService orderService(PaymentService paymentService) {
+        return new OrderService(paymentService);
+    }
+}
+```
+
+Here:
+
+- The `@Configuration` class tells Spring that this class contains bean definitions.
+- The `@Bean` annotation defines a bean explicitly.
+- The **IoC container** creates and manages these beans, injecting **PaymentService** into **OrderService**.
+  This approach is useful when you need fine-grained control over bean creation or when dealing with classes you can’t annotate (**e.g.**, `third-party libraries`).
