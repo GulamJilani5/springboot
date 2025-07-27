@@ -1,8 +1,8 @@
-⏺️🔵🟦🟩🟢 ◼️🔹➡️
+⏺️🔵🟦🟩🟢 ◼️🔹➡️ 🔷
 
 # ⏺️ The spring-boot-starter-web
 
-dependency includes:
+Dependency Includes:
 
 - **spring-web** for Spring MVC.
 - **jackson-databind** for JSON processing, which includes ObjectMapper.
@@ -10,20 +10,6 @@ dependency includes:
 ### ➡️ spring-web
 
 Core part of the Spring Framework that provides the infrastructure for building web applications, particularly those using the Model-View-Controller (MVC) pattern. It is designed to handle HTTP requests, process them, and return appropriate responses.
-
-##### 🟢 ResponseEntity
-
-ResponseEntity allows to specify:
-
-- **Body:** The response payload (**e.g.**, a `Java object`, `JSON`, or `plain text`).
-- **Status Code:** The HTTP status (**e.g.**, `200` OK, `404` Not Found, `201` Created).
-- **Headers:** Custom HTTP headers (**e.g.**, `Content-Type`, `Cache-Control`).
-
-```java
-return ResponseEntity.status(HttpStatus.CREATED)
-                     .headers(headers)
-                     .body(Map.of("Message", "Signup Successful"));
-```
 
 ##### 🟢 RequestEntity
 
@@ -34,22 +20,37 @@ return ResponseEntity.status(HttpStatus.CREATED)
 
 ```java
     @PostMapping("/Signup")
-    public ResponseEntity<Map<String, String>> signup(RequestEntity<Map<String, String>> requestEntity)
+    public ResponseEntity<Map<String, String>> signup(@RequestEntity<Map<String, String>> requestEntity)
     // Access the request body
-    Map<String, String> signupInput = requestEntity.getBody();
+    /////Aproach 1 - Using @RequestEntity
+      Map<String, String> signupInput = requestEntity.getBody();
+    /////🟦Approach 2 - We can directly used `@RequestBody`
+      @PostMapping("/signup")
+      public ResponseEntity<Map<String, String>> signup( @RequestBody Map<String, String> reqBody)
+      String username = reqBody.get("username");
+      String password = reqBody.get("password");
+
     // Access headers
+    ///// Aproach 1 - Using @RequestEntity
     String contentType = requestEntity.getHeaders().getContentType().toString();
+    /////🟦Approach 2 - We can directly used `@RequestHeader`
+    @PostMapping
+    public ResponseEntity<Map<String, String>> signup(@RequestHeader Map<String, String> reqHeaders )
+    String contetnType: reqHeaders.get("content-type");
+    String host: reqHeaders.get("host");
+
     // Access method
     String method = requestEntity.getMethod().toString();
+
     // Access URL
     String url = requestEntity.getUrl().toString();
 
 ```
 
-- `@RequestParam`(`?key=value`) and `@PathVariable`(`/user/generic`) Are Not Part of **RequestEntity**.
+- 🔵`@RequestParam`(`?key=value`) and `@PathVariable`(`/user/generic`) Are Not Part of **RequestEntity**.
 - `@RequestParam` and `@PathVariable` are part of Spring MVC’s annotation-based model, designed to simplify request handling by extracting specific components without needing the full RequestEntity. They are processed by Spring’s **HandlerMethodArgumentResolver** to bind request data to method parameters automatically.
 
-- 🔹Using **RequestEntity** we can get the query paramater and path.
+- 🔷Using **RequestEntity** we can get the query paramater and path.
 
 ```java
     @GetMapping("/generic")
@@ -59,17 +60,25 @@ return ResponseEntity.status(HttpStatus.CREATED)
 
 ```
 
-- 🔹Using **@RequestParam**
+- 🔷Using **@RequestParam**
 
 ```java
-   @GetMapping("/search")
+
+  // Method 1
+  @PostMapping("/filter/{id}")
+    public Map<String, String> filterMethod(@RequestParam Map<String, String> reqParam)
+    String page = reqParam.get("page");
+    String date = reqParam.get("date");
+
+  // Method 2
+   @PostMapping("/search")
    public ResponseEntity<Map<String, String>> searchUser(
-        @RequestParam("username") String username,
-        @RequestParam(value = "role", required = false) String role)
+        @RequestParam("page") String page,
+        @RequestParam(value = "date", required = false) String date)
 
 ```
 
-- 🔹Using **@PathVariable**
+- 🔷Using **@PathVariable**
 
 ```java
 @RestController
@@ -89,6 +98,20 @@ public class ProductController {
 
 ```
 
+##### 🟢 ResponseEntity
+
+ResponseEntity allows to specify:
+
+- **Body:** The response payload (**e.g.**, a `Java object`, `JSON`, or `plain text`).
+- **Status Code:** The HTTP status (**e.g.**, `200` OK, `404` Not Found, `201` Created).
+- **Headers:** Custom HTTP headers (**e.g.**, `Content-Type`, `Cache-Control`).
+
+```java
+return ResponseEntity.status(HttpStatus.CREATED)
+                     .headers(headers)
+                     .body(Map.of("Message", "Signup Successful"));
+```
+
 ##### Spring MVC Framework
 
 - **Model-View-Controller Architecture:** Spring MVC follows the MVC pattern, separating the application logic (Model), presentation layer (View), and request handling (Controller).
@@ -97,7 +120,7 @@ public class ProductController {
 
 ##### HTTP Message Conversion
 
-- Spring Web provides HttpMessageConverter to convert HTTP request bodies to Java objects and Java objects to HTTP response bodies. For example, JSON data in a POST request can be automatically converted to a Java object using MappingJackson2HttpMessageConverter (powered by Jackson).
+- Spring Web provides **HttpMessageConverter** to convert HTTP request bodies to Java objects and Java objects to HTTP response bodies. For example, JSON data in a `POST` request can be automatically converted to a Java object using **MappingJackson2HttpMessageConverter** (powered by Jackson).
 
 ```java
 @PostMapping("/users")
