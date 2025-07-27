@@ -30,14 +30,16 @@ private final ObjectMapper objectMapper = new ObjectMapper().enable(Serializatio
         String jsonReq = objectMapper.writeValueAsString(reqBody);
         String jsonHeader = objectMapper.writeValueAsString(reqHeader);
 
-        // Path Variable
+        //🔷 Path Variable
          System.out.println("@PathVariable - id: " + id);
-        //Request Param(Query Parameter)
+
+        //🔷Request Param(Query Parameter)
          System.out.println("@RequestParam - request parameter: " + jsonParam);
-        // Header
-        ///// Request Header
+
+        //🔷 Header
+        ///// 🔹Request Header
         System.out.println("@RequestHeader - headers: " + jsonHeader);
-        ///// Response Header
+        /////🔹 Response Header
         // Basic validation
         if (reqBody == null || !reqBody.containsKey("username") || !reqBody.containsKey("password")) {
             // Create custom headers for error response
@@ -58,12 +60,13 @@ private final ObjectMapper objectMapper = new ObjectMapper().enable(Serializatio
         successHeaders.add("X-Request-ID", UUID.randomUUID().toString());
         successHeaders.add("Location", "/user/" + reqBody.get("username")); // Example: Resource location
 
-        //Request Body
+        //🔷Request Body
         System.out.println("@RequestBody - request body: " + jsonReq);
 
-
+       //🔷 Response Body
         Map<String, String> successResponse = new HashMap<>();
         successResponse.put("Message", "Success");
+
         return ResponseEntity
                              .status(HttpStatus.CREATED)
                              .headers(successHeaders)
