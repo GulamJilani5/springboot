@@ -21,9 +21,9 @@ public static class ErrorResponse {
 
 ### 🟢 Logging
 
-**logger.warn()** → Validation, access, and user-level errors.
-**logger.info()** → Expected conditions (e.g., resource not found).
-**logger.error()** → Critical server errors & runtime exceptions.
+- `logger.warn()` → Validation, access, and user-level errors.
+- `logger.info()` → Expected conditions (e.g., resource not found).
+- `logger.error()` → Critical server errors & runtime exceptions.
 
 ### 🟢 Exception Types & Their Purpose
 
