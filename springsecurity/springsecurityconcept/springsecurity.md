@@ -5,7 +5,7 @@
 
 Provides comprehensive security services, including `authentication`, `authorization`, and protection against common vulnerabilities like `CSRF`, `XSS`, `session fixation`, and more.
 
-## ➡️ Dependecny
+## ➡️ Spring Security Dependecny
 
 ```java
 
@@ -13,6 +13,29 @@ Provides comprehensive security services, including `authentication`, `authoriza
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-security</artifactId>
     </dependency>
+```
+
+## ➡️ JWT Dependencies
+
+```java
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-api</artifactId>
+    <version>0.11.5</version>
+</dependency>
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-impl</artifactId>
+    <scope>runtime</scope>
+    <version>0.11.5</version>
+</dependency>
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-jackson</artifactId>
+    <scope>runtime</scope>
+    <version>0.11.5</version>
+</dependency>
+
 
 ```
 
@@ -67,6 +90,5 @@ flowchart TD
     G --> H[Authorization Manager - Check Roles/Permissions]
     H --> I[Controller - Business Logic]
     I --> J[Response Back to Client]
-
 
 ```

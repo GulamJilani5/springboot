@@ -65,3 +65,9 @@ public static class ErrorResponse {
 
 - `RuntimeException` → Catch-all for runtime issues.
 - `Exception` → Final fallback for unhandled errors.
+
+## OutOfMemoryError
+
+- We do not required to handle such errors.
+- Once it occurs, the JVM is in an unstable state — even if you catch it, the app might behave unpredictably.
+- The correct approach is to prevent it (optimize code, fix memory leaks, tune JVM memory).
