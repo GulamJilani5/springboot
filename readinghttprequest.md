@@ -1,3 +1,5 @@
+🔵🟢🔴➡️⭕🟠🟦🟣🟥🟧✔️⏺️ ☑️ • ‣ → ⁕
+
 ```java
 
 package AuthCentral.AuthCentral.controller;

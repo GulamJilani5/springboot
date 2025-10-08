@@ -43,6 +43,11 @@ public static class ErrorResponse {
 - `ResourceNotFoundException` → Requested entity not found.
 - `UserAlreadyExistsException` → Duplicate resource (e.g., user registration).
 
+##### 🔷 Database Exception
+
+- `DataIntegrityViolationException`
+- `SQLException`
+
 ##### 🔷 Technical & Infrastructure Errors
 
 - `DataAccessException` → Database errors.
