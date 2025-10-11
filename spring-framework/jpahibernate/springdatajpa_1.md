@@ -132,9 +132,9 @@ public class Customer {
 
 - Define an interface, extend the right Spring Data interface — Spring provides implementation automatically.
 - Common interfaces:
-  - CrudRepository<T, ID> — basic CRUD
-  - PagingAndSortingRepository<T, ID> — adds pagination & sorting
-  - JpaRepository<T, ID> — full JPA features (flush, batch deletes, etc.)
+  - **CrudRepository<T, ID>** — basic CRUD
+  - **PagingAndSortingRepository<T, ID>** — adds pagination & sorting
+  - **JpaRepository<T, ID>** — full JPA features (flush, batch, deletes, etc.)
 
 ```java
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
@@ -144,9 +144,3 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 ```
 
 - Defining repository interfaces and method signatures is the central pattern.
-
-### 🟦 Query creation: derived queries and native SQL(@Query)
-
-##### 🔵 Derived query methods:
-
-##### 🔵 Custom JPQL or native queries with @Query:
