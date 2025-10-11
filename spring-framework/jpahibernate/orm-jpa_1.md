@@ -18,26 +18,26 @@ Process of persisting(mapping) java objects directly into a db tables.
 ## 🟦 Is there any code for JPA
 
 - JPA itself has no working code, its just a standard(blueprint).
-- Needed a JPA provider like Hibernate to make it owrk in real applications.
+- Needed a JPA provider like Hibernate to make it work in real applications.
 
 ## 🟦 JPA Components
 
-- JPA consists mainly of interfaces, annotations, and rules.
+- JPA consists mainly of **interfaces**, **annotations**, and **rules**.
 
 #### 🔵 Interfaces
 
 - These are part of the specification and represent the contract for ORM operations.
 - These interfaces only define abstract methods. They don’t contain any implementation.
 
-##### EntityManager
+##### → EntityManager
 
 - Core interface for interacting with the persistence context.
 
-##### EntityTransaction
+##### → EntityTransaction
 
 - Manages transactions in resource-local setups.
 
-##### Query
+##### → Query
 
 - Represents database queries in a type-safe way.
 
