@@ -1,33 +1,130 @@
 🔵🟢🔴➡️⭕🟠🟦🟣🟥🟧✔️⏺️ ☑️ • ‣ → ⁕
 
-# ⏺️ DispatcherServlet
+# ⏺️ Stereotype Annotations
 
-- Find Dispatcher serverlet concepts in springboot `D:\Jilani\learning\spring boot\springbootcore\springboot-lifecycle.md`
-  **DispatcherServlet** is the front controller in the Spring MVC framework.
-  It receives all incoming HTTP requests, then dispatches them to the appropriate controller for further processing.
+- Stereotype annotations are meta-annotations that mark classes as Spring-managed components, enabling component scanning.
+- They are built on top of `@Component` and provide semantic meaning.
+- These annotations trigger auto-detection during component scanning. They can include attributes like value for bean name (**e.g.**, `@Service("myService")`).
 
-## Detailed Explanation
+### ➡️ @Component
 
-- In a Spring MVC application, the DispatcherServlet acts as the central entry point for every web request.
-- It sits between the client and the backend business logic.
-
-- **When a request comes in:**
-
-  - Receives the request (front controller pattern).
-  - Consults Handler Mappings to find the right controller and method.
-  - Calls the controller, which returns a ModelAndView or response.
-  - Passes the result to the View Resolver, which decides which view (like a JSP, Thymeleaf template, JSON, etc.) to render.
-  - Sends the final response back to the client.
+- It is a base annotation.
+- It Indicates a class is a Spring bean. Used for generic components.
 
 ```java
-Client → DispatcherServlet → HandlerMapping → Controller
-         → ModelAndView → ViewResolver → View → Response
-
+    @Component
+    public class GenericComponent {
+        // ...
+    }
 ```
 
-- **Key Points to Emphasize in an Interview**
+### ➡️ @Service
 
-- It follows the Front Controller design pattern.
-- Configured automatically when you use @EnableWebMvc or Spring Boot’s auto-configuration.
-- It delegates responsibilities rather than handling business logic itself.
-- Plays a key role in integrating different components of Spring MVC (`controllers`, `views`, `exception handling`, etc.).
+- For service-layer classes (business logic). No functional difference from @Component, but improves readability.
+
+```java
+    @Service
+    public class UserService {
+        // ...
+    }
+```
+
+### ➡️ @Repository
+
+- For data access objects (DAOs).
+- It Adds exception translation (**e.g.**, converts JDBC exceptions to `Spring's DataAccessException`).
+
+```java
+    @Repository
+    public class UserRepository {
+        // ...
+    }
+```
+
+### ➡️ @Controller / @RestController
+
+- For web controllers in Spring MVC. `@RestController` combines `@Controller` and `@ResponseBody`.
+
+```java
+   @RestController
+    public class UserController {
+        // ...
+    }
+```
+
+### ➡️ Custom stereotypes can be created by annotating with @Component.
+
+# ⏺️ @Configuration, @Bean, @Value, @Autowired, @Qualifier & @Primary
+
+- These annotations are core to annotation-based configuration in Spring.
+
+### ➡️ @Configuration
+
+- Marks a class as a source of bean definitions. Replaces **XML** config. The class can contain `@Bean` methods.
+
+```java
+    @Configuration
+    public class AppConfig {
+        // Bean definitions here
+   }
+```
+
+### ➡️ @Bean
+
+- Defines a bean in a @Configuration class. The method name becomes the bean name (overridable with name attribute). Spring calls the method to create the bean.
+
+```java
+   @Configuration
+    public class AppConfig {
+        @Bean
+        public UserService userService() {
+            return new UserService();
+        }
+    }
+```
+
+- Supports lifecycle methods (e.g., `initMethod`, `destroyMethod`).
+
+### ➡️ @Value
+
+- Injects values from properties files, environment variables, or `SpEL` (**Spring Expression Language**).
+- Useful for externalizing configuration.
+
+```java
+    @Value("${app.name}")
+    private String appName;  // From application.properties
+
+    @Value("#{systemProperties['user.home']}")
+    private String userHome;  // Using SpEL
+```
+
+### ➡️ @Autowired
+
+- Enables automatic dependency injection.
+- Can be on constructors, setters, or fields.
+- By default, required; use `required = false` for optional.
+
+```java
+   @Autowired
+    public UserService(UserRepository repository) {  // Constructor autowiring
+        // ...
+    }
+```
+
+### ➡️ @Qualifier
+
+- Resolves ambiguities when multiple beans of the same type exist. Specifies which bean to inject.
+
+```java
+  @Autowired
+@Qualifier("primaryRepo")
+private UserRepository repository;
+```
+
+### ➡️ @Primary
+
+### ➡️
+
+```java
+
+```
