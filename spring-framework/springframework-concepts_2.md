@@ -33,6 +33,7 @@
 
 - For data access objects (DAOs).
 - It Adds exception translation (**e.g.**, converts JDBC exceptions to `Spring's DataAccessException`).
+- Enables exception translation (e.g., `SQLException` to `DataAccessException`).
 
 ```java
     @Repository
