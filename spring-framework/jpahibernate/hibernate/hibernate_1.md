@@ -1,6 +1,6 @@
 🔵🟢🔴➡️⭕🟠🟦🟣🟥🟧✔️⏺️ ☑️ • ‣ → ⁕
 
-# ⏺️
+# ⏺️ Hibernate
 
 - Hibernate is a powerful, high-performance Object-Relational Mapping (ORM) framework for Java.
 - It provides a way to map Java classes (objects) to database tables and automate the persistence of objects in relational databases.
@@ -67,7 +67,6 @@ session.save(user);
 
 tx.commit();
 session.close();
-
 ```
 
 #### 🔵 Session Methods

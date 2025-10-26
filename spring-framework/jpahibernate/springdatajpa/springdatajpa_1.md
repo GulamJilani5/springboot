@@ -64,7 +64,7 @@ List<User> findByEmail(String email);
 ```
 
 - Spring Data JPA parses the method name and creates the SQL for you.
-- Or using @Query:
+- Or using `@Query`:
 
 ```java
 @Query("SELECT u FROM User u WHERE u.status = :status")
