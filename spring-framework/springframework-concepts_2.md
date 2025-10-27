@@ -1,6 +1,6 @@
 🔵🟢🔴➡️⭕🟠🟦🟣🟥🟧✔️⏺️ ☑️ • ‣ → ⁕
 
-# ⏺️ Stereotype Annotations
+## ⏺️ Stereotype Annotations
 
 - Stereotype annotations are meta-annotations that mark classes as Spring-managed components, enabling component scanning.
 - They are built on top of `@Component` and provide semantic meaning.
@@ -53,20 +53,18 @@
     }
 ```
 
-### ➡️ Custom stereotypes can be created by annotating with @Component.
+- Custom stereotypes can be created by annotating with `@Component`.
 
-# ⏺️ @Configuration, @Bean, @Value, @Autowired, @Qualifier & @Primary
+## ⏺️ @Configuration, @Bean, @Autowired, @Qualifier & @Primary
 
 - These annotations are core to annotation-based configuration in Spring.
 
-### ➡️ @Configuration, @Bean, @Autowired, @Qualifier & @Primary
-
-##### 🟦 @Configuration
+### ➡️ @Configuration
 
 - It tells Spring, "This class contains configuration logic, and you should look here for bean definitions (objects Spring manages)".
 - Marks a class as a source of bean definitions. Replaces **XML** config.
 
-##### 🟦 @Bean
+### ➡️ @Bean
 
 - It tells Spring, "The object returned by this method should be registered as a bean in the application context." This makes the object available for dependency injection throughout your application.
 - Supports lifecycle methods (**e.g.**, `initMethod`, `destroyMethod`).
@@ -75,28 +73,28 @@
   - **Constructor Injection:** Preferred for explicit dependencies and better testability.
   - **Manual Retrieval:** You can also get the bean from the `ApplicationContext` using context.getBean(MyService.class).
 
-##### 🟦 Creating Custom Bean
+### ➡️ Creating Custom Bean
 
 - **Spring Boot** often reduces the need for explicit `@Configuration` and `@Bean` by auto-configuring common components (e.g., @Component, @Controller @Service, @Repository, DataSource for databases). However, we still need custom beans not covered by auto-configuration.
 - In a **Spring Boot** project, create @Configuration classes with @Bean methods for custom beans in a dedicated configuration package, typically named config or configuration.
 - In Spring Boot, main class annotated with **@SpringBootApplication**, and it will automatically pick up `@Configuration` classes and components.
 - This ensures Spring Boot’s component scanning detects your `@Configuration` class. Keep it separate from **controllers**, **services**, or **repositories** for clarity and maintainability.
 
-##### 🟦 @Autowired
+### ➡️ @Autowired
 
 - Enables automatic dependency injection.
 - Can be on constructors, setters, or fields.
 - By default, required; use `required = false` for optional.
 
-##### 🟦 @Qualifier
+### ➡️ @Qualifier
 
 - Resolves ambiguities when multiple beans of the same type exist. Specifies which bean to inject.
 
-##### 🟦 @Primary
+### ➡️ @Primary
 
-- Marks one bean as the default choice when multiple beans of the same type are available, avoiding ambiguity without needing @Qualifier
+- Marks one bean as the default choice when multiple beans of the same type are available, avoiding ambiguity without needing **@Qualifier**.
 
-#### **Example**
+#### 🟦 Example
 
 - Assume you have an interface `MessageService` with two implementations, `EmailService` and `SMSService`. You want to define them as beans and control which one is injected.
 
