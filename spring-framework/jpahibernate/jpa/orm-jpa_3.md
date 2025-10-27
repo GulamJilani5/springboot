@@ -2,8 +2,8 @@
 
 # ⏺️ @Transactional
 
-Spring automatically wraps the method in a **proxy object** (using JDK Dynamic Proxy or CGLIB) that handles the transaction lifecycle.
-
+- Find more about `@Transactional` in the `transactional.jpeg`.
+  Spring automatically wraps the method in a **proxy object** (using **JDK Dynamic Proxy or CGLIB**) that handles the transaction lifecycle.
 - This process include:
   - **Opening a transaction** before the method executes.
   - **Committing the transaction** if the execution is successful.
