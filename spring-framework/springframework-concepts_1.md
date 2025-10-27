@@ -233,8 +233,8 @@ public class AppConfig {
 
 ### 🟦 Property Binding in Spring
 
-- Property binding (or externalized configuration) allows injecting configuration values (e.g., database URLs, API keys) into beans without hardcoding. It promotes loose coupling and environment-specific setups.
-- Spring supports binding from properties files, YAML, environment variables, or command-line args, with support for type conversion and validation since Spring 3.0.
+- Property binding (or externalized configuration) allows injecting configuration values (**e.g.**, `database URLs`, `API keys`) into beans without hardcoding. It promotes loose coupling and environment-specific setups.
+- Spring supports binding from properties files, `YAML`, environment variables, or command-line args, with support for type conversion and validation since Spring 3.0.
 
 #### Core Mechanisms
 

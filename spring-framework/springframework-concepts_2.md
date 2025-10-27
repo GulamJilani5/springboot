@@ -59,32 +59,121 @@
 
 - These annotations are core to annotation-based configuration in Spring.
 
-### ➡️ @Configuration
+### ➡️ @Configuration, @Bean, @Autowired, @Qualifier & @Primary
 
-- Marks a class as a source of bean definitions. Replaces **XML** config. The class can contain `@Bean` methods.
+##### 🟦 @Configuration
+
+- It tells Spring, "This class contains configuration logic, and you should look here for bean definitions (objects Spring manages)".
+- Marks a class as a source of bean definitions. Replaces **XML** config.
+
+##### 🟦 @Bean
+
+- It tells Spring, "The object returned by this method should be registered as a bean in the application context." This makes the object available for dependency injection throughout your application.
+- Supports lifecycle methods (**e.g.**, `initMethod`, `destroyMethod`).
+- Methods annotated with `@Bean` return an object (e.g., an instance of a class). And this object will be managed by the spring framework. And this object will be used across the application (**e.g.**, `controllers`, `services`, `repositories`) using:
+  - **@Autowired:** For field, setter, or constructor injection.
+  - **Constructor Injection:** Preferred for explicit dependencies and better testability.
+  - **Manual Retrieval:** You can also get the bean from the `ApplicationContext` using context.getBean(MyService.class).
+
+##### 🟦 Creating Custom Bean
+
+- **Spring Boot** often reduces the need for explicit `@Configuration` and `@Bean` by auto-configuring common components (e.g., @Component, @Controller @Service, @Repository, DataSource for databases). However, we still need custom beans not covered by auto-configuration.
+- In a **Spring Boot** project, create @Configuration classes with @Bean methods for custom beans in a dedicated configuration package, typically named config or configuration.
+- In Spring Boot, main class annotated with **@SpringBootApplication**, and it will automatically pick up `@Configuration` classes and components.
+- This ensures Spring Boot’s component scanning detects your `@Configuration` class. Keep it separate from **controllers**, **services**, or **repositories** for clarity and maintainability.
+
+##### 🟦 @Autowired
+
+- Enables automatic dependency injection.
+- Can be on constructors, setters, or fields.
+- By default, required; use `required = false` for optional.
+
+##### 🟦 @Qualifier
+
+- Resolves ambiguities when multiple beans of the same type exist. Specifies which bean to inject.
+
+##### 🟦 @Primary
+
+- Marks one bean as the default choice when multiple beans of the same type are available, avoiding ambiguity without needing @Qualifier
+
+#### **Example**
+
+- Assume you have an interface `MessageService` with two implementations, `EmailService` and `SMSService`. You want to define them as beans and control which one is injected.
+
+- **Step 1:** Define the Interface and Implementations
 
 ```java
-    @Configuration
-    public class AppConfig {
-        // Bean definitions here
-   }
-```
 
-### ➡️ @Bean
+    public interface MessageService {
+        String sendMessage();
+    }
 
-- Defines a bean in a @Configuration class. The method name becomes the bean name (overridable with name attribute). Spring calls the method to create the bean.
+    public class EmailService implements MessageService {
+        public String sendMessage() {
+            return "Sending email...";
+        }
+    }
 
-```java
-   @Configuration
-    public class AppConfig {
-        @Bean
-        public UserService userService() {
-            return new UserService();
+    public class SMSService implements MessageService {
+        public String sendMessage() {
+            return "Sending SMS...";
         }
     }
 ```
 
-- Supports lifecycle methods (e.g., `initMethod`, `destroyMethod`).
+- **Step 2:** Create a @Configuration Class with @Bean, @Primary, and @Qualifier
+
+```java
+    import org.springframework.context.annotation.Configuration;
+    import org.springframework.context.annotation.Bean;
+    import org.springframework.context.annotation.Primary;
+
+    @Configuration
+    public class AppConfig {
+
+        @Bean
+        @Primary // This bean is the default when no qualifier is specified
+        public MessageService emailService() {
+            return new EmailService();
+        }
+
+        @Bean
+        @Qualifier("sms") // Name this bean "sms" for explicit injection
+        public MessageService smsService() {
+            return new SMSService();
+        }
+    }
+```
+
+- **Step 3:** Inject Beans Using @Autowired, @Qualifier, and @Primary
+
+```java
+    import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.beans.factory.annotation.Qualifier;
+    import org.springframework.stereotype.Component;
+
+    @Component
+    public class MessageSender {
+
+        private final MessageService defaultService; // Will get EmailService due to @Primary
+        private final MessageService smsService;     // Will get SMSService due to @Qualifier
+
+        @Autowired
+        public MessageSender(MessageService defaultService, // No @Qualifier, so @Primary bean is used
+                            @Qualifier("sms") MessageService smsService) { // Explicitly specify "sms" bean
+            this.defaultService = defaultService;
+            this.smsService = smsService;
+        }
+
+        public void sendMessages() {
+            System.out.println("Default Service: " + defaultService.sendMessage()); // EmailService
+            System.out.println("SMS Service: " + smsService.sendMessage());         // SMSService
+        }
+    }
+```
+
+- **@Primary:** EmailService is marked as `@Primary`, so it’s the default choice when Spring needs a MessageService bean and no `@Qualifier` is specified.
+- **@Qualifier:** The sms qualifier explicitly selects the `SMSService` bean when injecting into the `smsService` field.
 
 ### ➡️ @Value
 
@@ -97,35 +186,4 @@
 
     @Value("#{systemProperties['user.home']}")
     private String userHome;  // Using SpEL
-```
-
-### ➡️ @Autowired
-
-- Enables automatic dependency injection.
-- Can be on constructors, setters, or fields.
-- By default, required; use `required = false` for optional.
-
-```java
-   @Autowired
-    public UserService(UserRepository repository) {  // Constructor autowiring
-        // ...
-    }
-```
-
-### ➡️ @Qualifier
-
-- Resolves ambiguities when multiple beans of the same type exist. Specifies which bean to inject.
-
-```java
-  @Autowired
-@Qualifier("primaryRepo")
-private UserRepository repository;
-```
-
-### ➡️ @Primary
-
-### ➡️
-
-```java
-
 ```
