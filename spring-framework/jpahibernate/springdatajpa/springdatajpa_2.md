@@ -45,7 +45,7 @@
 ### 🟦 Custom Query(JPQL)
 
 - JPQL (Java Persistence Query Language) is a database-independent, object-oriented query language defined by JPA.
-- You write queries using Entity names and Entity field names, not table or column names.
+- 🔴🔴🔴🔴🔴You write queries using **Entity names** and **Entity field names**, not table or column names and whereas nativ query works at db level(directly intract with the db ike sql query)
 - JPQL queries are translated by JPA/Hibernate into the appropriate SQL for your database.
 - Works across databases (portable).
 
