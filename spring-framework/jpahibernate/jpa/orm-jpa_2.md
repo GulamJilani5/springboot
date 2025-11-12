@@ -2,12 +2,15 @@
 
 # ⏺️ Entity States
 
-| Hibernate State | Equivalent JPA State |
-| --------------- | -------------------- |
-| **Transient**   | **New**              |
-| **Persistent**  | **Managed**          |
-| **Detached**    | **Detached**         |
-| **Removed**     | **Removed**          |
+- These states belong to the lifecycle of an **entity managed by the JPA Persistence Context**,
+  which in turn is managed through the `EntityManager`(**JPA**) or `Session`(**Hibernate**).
+
+  | Hibernate State | Equivalent JPA State |
+  | --------------- | -------------------- |
+  | **Transient**   | **New**              |
+  | **Persistent**  | **Managed**          |
+  | **Detached**    | **Detached**         |
+  | **Removed**     | **Removed**          |
 
 - In JPA, states are similar but termed "**new**," "**managed**," "**detached**," "**removed**."
 
