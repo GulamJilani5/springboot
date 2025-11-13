@@ -2,6 +2,8 @@
 
 # ⏺️ @Async
 
+- Very much same to Javascript's async/await.
+- It is spring AOP and only works when called form the another class not within the class.
 - @Async = Proxy + TaskExecutor + Thread Management
 
 - How `@Async` Works Internally in Spring Boot
@@ -46,27 +48,119 @@
 
 ---
 
-````java
+## ➡️ @Async, There Are Only Two Practical Ways To Use It
 
----
+### 🟦 Scenario 1: @Async with void (Fire-and-forget)
 
-## ⚡ Configuration Example
+##### 🔵 Enable Async In The Main Method
 
 ```java
-@Configuration
-@EnableAsync
-public class AsyncConfig {
+   @SpringBootApplication
+    @EnableAsync
+    public class MyApplication {
+        public static void main(String[] args) {
+            SpringApplication.run(MyApplication.class, args);
+        }
+    }
 
-    @Bean(name = "taskExecutor")
-    public Executor taskExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(3);
-        executor.setMaxPoolSize(5);
-        executor.setQueueCapacity(100);
-        executor.setThreadNamePrefix("AsyncThread-");
-        executor.initialize();
-        return executor;
+
+```
+
+##### 🔵
+
+```java
+  @Service
+  public class EmailService {
+
+    @Async
+    public void sendEmail(String recipient) {
+        try {
+            Thread.sleep(3000); // simulating delay
+        } catch (InterruptedException e) { }
+
+        System.out.println("Email sent to: " + recipient);
+    }
+ }
+
+```
+
+##### 🔵 Calling from the Controller
+
+```java
+  emailService.sendEmail("john@example.com");
+
+```
+
+### 🟦 Scenario 2: @Async with CompletableFuture<T> (Return result asynchronously)
+
+##### 🔵 Enable Async In The Main Method
+
+```java
+   @SpringBootApplication
+    @EnableAsync
+    public class MyApplication {
+        public static void main(String[] args) {
+            SpringApplication.run(MyApplication.class, args);
+        }
+    }
+
+
+```
+
+##### 🔵
+
+```java
+  @Service
+public class EmailService {
+
+    @Async
+    public CompletableFuture<String> sendEmail(String recipient) {
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {}
+
+        String result = "Email sent to: " + recipient;
+
+        return CompletableFuture.completedFuture(result);
     }
 }
 
-````
+
+```
+
+##### 🔵 Calling from the Controller
+
+```java
+
+  @RestController
+public class EmailController {
+
+    @Autowired
+    private EmailService emailService;
+
+    @GetMapping("/send")
+    public String sendEmail() throws Exception {
+
+        CompletableFuture<String> future =
+                emailService.sendEmail("john@gmail.com");
+
+        // Do some other work here (non-blocking)
+
+        String result = future.get();   // Wait and get the result
+
+        return result;
+    }
+}
+
+
+```
+
+## ➡️ Use Cases
+
+- Sending emails
+- Sending notifications
+- Background report generation
+- Heavy computations
+- File processing
+- Long API calls
+- Data sync tasks
