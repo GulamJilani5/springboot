@@ -2,6 +2,7 @@
 
 # ⏺️ @Async
 
+- Find More `D:\Jilani\learning\system design\typeofsystems\communicationpattern\asynchronous\asynchronous.md`
 - non-blocking async call, **@Async** runs a method in a different thread (TaskExecutor thread pool).
 - `CompletableFuture` in Java is very similar to Promises in JavaScript.
 - It is spring AOP and only works when called form the another class not within the class.
