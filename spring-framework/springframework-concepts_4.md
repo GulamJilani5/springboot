@@ -2,7 +2,8 @@
 
 # ⏺️ @Async
 
-- Very much same to Javascript's async/await.
+- non-blocking async call, **@Async** runs a method in a different thread (TaskExecutor thread pool).
+- `CompletableFuture` in Java is very similar to Promises in JavaScript.
 - It is spring AOP and only works when called form the another class not within the class.
 - @Async = Proxy + TaskExecutor + Thread Management
 
