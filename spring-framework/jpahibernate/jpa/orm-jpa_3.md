@@ -91,3 +91,98 @@ public class OrderService {
 ```
 
 - Using **self** ensures the call goes through the proxy, enabling transactional behavior.
+
+## ➡️ Difference Between REQUIRED and REQUIRES_NEW
+
+### 🟦 @Transactional(propagation = REQUIRED)
+
+- Default behavior in Spring.
+- If a transaction already exists:
+
+  - The method joins the existing transaction.
+
+- If no transaction exists:
+
+  - A new transaction is started.
+
+- Rollback behavior:
+
+  - If the outer transaction rolls back, everything inside (including this method) also rolls back.
+
+- Use case:
+  - When you want all operations to be part of a single logical unit of work.
+
+```java
+   @Service
+   public class OrderService {
+
+    @Transactional  // REQUIRED by default
+    public void placeOrder() {
+        saveOrder(); // participates in same TX
+
+        paymentService.debitAccount(); // if this fails → whole TX rolls back
+    }
+}
+
+```
+
+### 🟦 @Transactional(propagation = REQUIRES_NEW)
+
+- Always starts a new, independent transaction.
+
+- If a transaction already exists:
+
+  - The existing transaction is suspended.
+  - A new transaction is created for this method.
+
+- When this method completes:
+
+  - The new transaction is committed or rolled back independently of the outer transaction.
+  - The outer transaction is then resumed.
+
+- Rollback behavior:
+
+  - Rollback in the outer transaction does not affect this inner transaction.
+
+- Use case:
+
+  - When you want a method to commit changes regardless of the outer transaction’s outcome.
+  - **Example:** Logging, audit trails, sending notifications — things that should persist even if the main business transaction fails.
+
+  ```java
+  @Service
+  public class PaymentService {
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void debitAccount() {
+        // Runs in its OWN transaction
+    }
+  }
+
+  ```
+
+  ```java
+      @Service
+  public class UserService {
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void processUser(User user) {
+        // Outer transaction starts here
+        saveUser(user);  // Joins outer transaction
+        logActivity(user);  // Joins outer transaction
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)  // Default is REQUIRED
+    public void saveUser(User user) {
+        // Joins the outer transaction from processUser
+        userRepository.save(user);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void logActivity(User user) {
+        // New transaction created; outer is suspended
+        activityRepository.save(new Activity(user.getId(), "Processed"));
+        // Commits independently, even if processUser later fails
+    }
+  }
+  ```
