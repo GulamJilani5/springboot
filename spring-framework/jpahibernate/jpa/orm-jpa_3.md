@@ -92,6 +92,22 @@ public class OrderService {
 
 - Using **self** ensures the call goes through the proxy, enabling transactional behavior.
 
+## ➡️ Does @Transactional(readOnly = true) prevent dirty checking?
+
+Yes — it effectively prevents dirty checking because Hibernate does NOT perform dirty checking for read-only transactions.
+
+### 🟦 Extra Performance Hibernate Doesn’t Need to Spend
+
+| Performance Cost                    | Required in readOnly? |
+| ----------------------------------- | --------------------- |
+| Create snapshots                    | ❌ No                 |
+| Dirty checking                      | ❌ No                 |
+| Flushing                            | ❌ No                 |
+| Generating update SQL               | ❌ No                 |
+| Tracking collection changes         | ❌ No                 |
+| Managing versioning                 | ❌ No                 |
+| Extra memory in Persistence Context | ❌ Reduced            |
+
 ## ➡️ Difference Between REQUIRED and REQUIRES_NEW
 
 ### 🟦 @Transactional(propagation = REQUIRED)
