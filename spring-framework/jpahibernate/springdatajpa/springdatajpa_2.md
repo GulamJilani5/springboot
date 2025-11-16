@@ -6,7 +6,7 @@
 
 - Derived queries allow Spring Data JPA to automatically generate JPQL queries based on the method name in your repository interface.
 
-- This is ideal for straightforward CRUD operations and filtering without writing explicit query strings. The framework parses the method name using the JPA Criteria API to build the query.
+- This is ideal for straightforward CRUD operations and filtering without writing explicit query strings. The framework parses the method name using the JPA 🔴 Criteria API to build the query.
 
   | **Keyword**      | **Sample Method**                   | **Generated JPQL Snippet**                                                           | **Explanation**                                                                                                   |
   | ---------------- | ----------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------- |

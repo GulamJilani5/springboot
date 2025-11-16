@@ -37,7 +37,7 @@
 | Parent & child inserted together but deletion should not delete child (e.g., Student–Courses) | `PERSIST` & `MERGE` only   |
 | Shared child referenced by multiple parents (e.g., Roles, Categories)                         | ❌ Do **NOT** use `REMOVE` |
 
-## ➡️ Why can using CascadeType. ALL sometimes cause data loss?
+## ➡️ Why can using CascadeType.ALL sometimes cause data loss?
 
 - CascadeType.ALL means “whatever happens to the parent should also happen to the child.”
   - That includes: PERSIST, MERGE, REFRESH, DETACH, REMOVE ← this is the dangerous one
