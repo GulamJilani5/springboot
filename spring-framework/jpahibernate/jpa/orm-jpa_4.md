@@ -1,6 +1,6 @@
-🔵🟢🔴➡️⭕🟠🟦🟣🟥🟧✔️⏺️ ☑️ • ‣ → ⁕
+⏺️ ➡️ 🟦 🔵 🟢🔴⭕🟠🟣🟥🟧✔️ ☑️ • ‣ → ⁕
 
-# ⏺️ Cascade in JPA
+# ⏺️ Cascade & Orphan Removal In JPA
 
 - In JPA/Hibernate, Cascade defines how operations performed on a parent entity should automatically be applied to its related (child) entities.
 - **Example:**
@@ -103,3 +103,25 @@ Even if you just wanted to update the list → gone.
   - User → Address (sometimes shared)
   - Employee → Department
   - Student → Courses
+
+# ⏺️ Orphan Removal In JPA
+
+- Orphan Removal = Automatically delete child entities that are no longer referenced by the parent.
+- If the parent no longer ‘owns’ this child, JPA should delete it from the database
+
+```java
+  @OneToMany(mappedBy = "parent", orphanRemoval = true)
+private List<Address> addresses;
+
+```
+
+➡️ In domain models, some child records shouldn't live without the parent.
+
+- A User → UserProfile
+- A Cart → CartItem
+- A Question → Options
+- An Order → OrderLineItems
+
+If the parent removes reference, those should not remain “dangling” in the DB.
+
+🟦
