@@ -303,3 +303,15 @@ Hibernate can batch related data queries to reduce the number of queries.
 
 - **Use Tools:**
   - Libraries like **Spring Data JPA N+1 Detector** or **Hibernate Statistics** can warn you about excessive queries.
+
+➡️ Fetch Join vs Entity Graph
+
+- **Fetch Join**
+  - One-time, query-specific optimization.
+  - You know exactly what needs to be fetched for this query only.
+  - I use fetch join when I want a very intentional, query-specific fetch behavior.
+- **Entity Graph**
+  - Reusable, declarative fetch strategy.
+  - Multiple queries or methods need the same fetch plan.
+  - You want cleaner repos (no JPQL noise).
+  - I use entity graphs when I want to keep queries clean and make the fetch strategy reusable and maintainable.

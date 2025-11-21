@@ -123,5 +123,3 @@ private List<Address> addresses;
 - An Order → OrderLineItems
 
 If the parent removes reference, those should not remain “dangling” in the DB.
-
-🟦
