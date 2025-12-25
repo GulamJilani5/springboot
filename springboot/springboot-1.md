@@ -90,9 +90,9 @@ public class MyApplication {
   - Creates bean definitions
   - Stores them in the IoC container and manage the objects lifecycle and inject using **@Autowired** or constructor injection.
 
-  #### 🔵 @EnableAutoConfiguration
+#### 🔵 @EnableAutoConfiguration
 
-  - Automatically configures Spring beans based on classpath, properties, and environment.
+- Automatically configures Spring beans based on classpath, properties, and environment.
 
 - **How Starters Enable Auto-Configuration**
 
@@ -102,7 +102,7 @@ public class MyApplication {
   - Beans are created only if missing
   - You can override with custom **@Bean**
 
-##### `spring-boot-starter-web` = Spring MVC + Embedded Tomcat + Jackson + Validation + Auto-configuration
+##### ⁕ `spring-boot-starter-web` = Spring MVC + Embedded Tomcat + Jackson + Validation + Auto-configuration
 
 - **What Boot auto-creates:**
   - DispatcherServlet
@@ -110,7 +110,7 @@ public class MyApplication {
   - HttpMessageConverters
   - Embedded servlet container (Tomcat by default)
 
-##### `spring-boot-starter-data-jpa` = JPA + Hibernate + Spring Data + Spring ORM + Spring TX (transaction management) + Auto-configuration
+##### ⁕ `spring-boot-starter-data-jpa` = JPA + Hibernate + Spring Data + Spring ORM + Spring TX (transaction management) + Auto-configuration
 
 - **What Spring Boot auto-configures**
   - DataSource
@@ -121,7 +121,7 @@ public class MyApplication {
   - JpaRepository implementations
   - DDL execution (ddl-auto=update/create)
 
-##### `spring-boot-starter-security` = Spring Security Core + Spring Security Web + Spring Security Config + Authentication + Authorization + Filter Chain + Auto-configuration
+##### ⁕ `spring-boot-starter-security` = Spring Security Core + Spring Security Web + Spring Security Config + Authentication + Authorization + Filter Chain + Auto-configuration
 
 - **What Spring Boot auto-configures**
   - SecurityFilterChain
