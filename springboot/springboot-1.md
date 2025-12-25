@@ -32,12 +32,12 @@ public class AppConfig {
 
 ### 🟦 With Spring Boot
 
-- Just create a class with @SpringBootApplication.
+- Just create a class with **@SpringBootApplication**.
 - Put your code in the standard package structure.
 - Add a few dependencies (starters), and run.
 
 ```java
-@SpringBootApplication
+@SpringBootApplication //  Spring Boot Configuration  + component scanning + Enables auto-configuration
 public class MyApplication {
     public static void main(String[] args) {
         SpringApplication.run(MyApplication.class, args);
@@ -49,34 +49,6 @@ public class MyApplication {
 - No manual XML.
 - No explicit bean definitions for common stuff.
 - Boot auto-configures things if you follow the conventions (e.g., putting your `@SpringBootApplication` at the root package and keeping components inside sub-packages).
-
-#### 🔵 How It Works in Spring Boot:
-
-- **Auto-Detection:** If you name your main application class` MyAppApplication` and place it in the root package (e.g., `com.example`), Spring Boot automatically scans for components in that package and sub-packages—no need for explicit `@ComponentScan`.
-- **Embedded Servers:** By default, it starts an embedded **Tomcat server** on port **8080**. Want Jetty instead? Just exclude Tomcat and include Jetty—no XML server config required.
-- **Profiles and Environments:** It auto-loads `application.properties` or `application.yml` for defaults, switching to `application-dev.properties` if you set `spring.profiles.active=dev`.
-- **Database Auto-Setup:** If you're using **JPA/Hibernate**, it auto-creates tables from entities (via `spring.jpa.hibernate.ddl-auto=update`) without manual schema scripts.
-
-- **Example**
-  - **Traditional Spring:** You'd define a data source bean in XML or Java config, specify transaction managers, and enable **JPA** repositories manually.
-  - **Spring Boot:** Add the `spring-boot-starter-data-jpa` dependency, annotate your entity with `@Entity`, and your repository with `@Repository`. Boot auto-configures the **DataSource**, **EntityManagerFactory**, and **TransactionManager**. Just run the app!
-
-#### 🔵 Auto-wiring Beans via Starters
-
-- "Auto-wiring" refers to Spring's dependency injection (DI) mechanism, where beans (managed objects) are automatically connected based on types or names (e.g., via @Autowired).
-- Spring Boot uses “starters” — which are pre-packaged dependency bundles that bring in libraries and auto-configuration.
-- Starters are curated dependency descriptors (`Maven/Gradle POMs`) that bundle related libraries and their transitive dependencies. Together, they enable **"auto-configuration":** When you include a starter, Boot inspects your classpath and automatically creates and wires the necessary beans—no manual bean definitions needed.
-
-##### → How Starters Enable Auto-Wiring
-
-- **Starters as Entry Points:** Each starter (e.g., spring-boot-starter-web) includes Spring Boot's auto-configuration classes. These use @ConditionalOnClass, @ConditionalOnMissingBean, etc., to check if certain classes are on the classpath and create beans only if needed.
-- **Classpath Scanning:** At startup, Boot's AutoConfigurationImportSelector loads relevant @Configuration classes from starters. It then wires beans into your context.
-
-- **Examples of Auto-Wiring**
-
-  - **Web Starter (spring-boot-starter-web):** Includes **Spring MVC**, **Tomcat**, **Jackson**. Auto-wires a **DispatcherServlet**, **WebMvcConfigurer**, and **JSON converters**. Your `@RestController` beans are auto-detected and injected.
-  - **Data JPA Starter (spring-boot-starter-data-jpa):** Auto-configures **JpaRepository** implementations, **DataSource** (from `spring.datasource.url`), and **EntityManager**. Inject `@Autowired` private **UserRepository** repo;—it just works.
-  - **Security Starter (spring-boot-starter-security):** Auto-wires **SecurityFilterChain** with default HTTP Basic auth. Customize via `@Bean` overrides.
 
 - **pom.xml (Maven)**
 
@@ -91,30 +63,72 @@ public class MyApplication {
 </dependency>
 ```
 
-- **Main Application**
+#### 🔵 @SpringBootConfiguration
 
-```java
-  @SpringBootApplication  // Enables auto-configuration + component scanning
-public class MyApp {
-    public static void main(String[] args) {
-        SpringApplication.run(MyApp.class, args);
-    }
-}
-```
+- A specialized form of @Configuration
+- Marks the main class as the primary source of bean definitions
+- Tells Spring: This class contains (or imports) configuration for the entire application.
+- Allows defining beans using **@Bean**
 
-- **Controller (Auto-Wired)**
+- Why Boot uses it (instead of plain **@Configuration**)
+  - Helps Spring Boot identify the main configuration class
+  - Used internally during startup for:
+  - Auto-configuration ordering
+  - Application context bootstrapping
 
-```java
-  @RestController
-public class UserController {
-    @Autowired  // Auto-wires the auto-configured UserRepository
-    private UserRepository userRepository;
+#### 🔵 @ComponentScan
 
-    @GetMapping("/users")
-    public List<User> getAll() {
-        return userRepository.findAll();  // Boot auto-implemented this method
-    }
-}
-```
+- Automatically scans packages to find Spring-managed components
+- Scans current package + all sub-packages
+- All classes annotated with: **@Component**, **@Service**, **@Repository**, **@Controller**, **@RestController** are detected, creates their objects, manages their(objects) entire lifecycle, and stores them in the Spring IoC container. These beans can then be injected into other classes using dependency injection, commonly via **@Autowired** or constructor injection.
 
-- **Result:** Run `mvn spring-boot:run`, and you have a full **CRUD API** with database connectivity — no explicit bean wiring!
+- **What happens internally**
+
+  - Spring reads the package of the main class
+  - Recursively scans sub-packages
+  - Finds stereotype annotations
+  - Creates bean definitions
+  - Stores them in the IoC container and manage the objects lifecycle and inject using **@Autowired** or constructor injection.
+
+  #### 🔵 @EnableAutoConfiguration
+
+  - Automatically configures Spring beans based on classpath, properties, and environment.
+
+- **How Starters Enable Auto-Configuration**
+
+  - Starter adds libraries to classpath
+  - Boot detects libraries
+  - Conditional auto-configurations activate
+  - Beans are created only if missing
+  - You can override with custom **@Bean**
+
+##### `spring-boot-starter-web` = Spring MVC + Embedded Tomcat + Jackson + Validation + Auto-configuration
+
+- **What Boot auto-creates:**
+  - DispatcherServlet
+  - RequestMappingHandlerMapping
+  - HttpMessageConverters
+  - Embedded servlet container (Tomcat by default)
+
+##### `spring-boot-starter-data-jpa` = JPA + Hibernate + Spring Data + Spring ORM + Spring TX (transaction management) + Auto-configuration
+
+- **What Spring Boot auto-configures**
+  - DataSource
+  - From spring.datasource.
+  - EntityManagerFactory
+  - Hibernate SessionFactory
+  - JpaTransactionManager
+  - JpaRepository implementations
+  - DDL execution (ddl-auto=update/create)
+
+##### `spring-boot-starter-security` = Spring Security Core + Spring Security Web + Spring Security Config + Authentication + Authorization + Filter Chain + Auto-configuration
+
+- **What Spring Boot auto-configures**
+  - SecurityFilterChain
+  - Default authentication
+  - In-memory user
+  - Generated password at startup
+  - CSRF protection
+  - Session management
+  - Basic authentication
+  - Form login
