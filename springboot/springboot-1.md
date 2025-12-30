@@ -4,7 +4,7 @@
 
 - `D:\Jilani\learning\spring boot\spring-framework\springframework-concepts_2.md`
 
-## ➡️ Convention Over Configuration
+## ➡️ Convention Over Configuration, @SpringBootApplication, spring Auto configuration and Spring bean management
 
 - Normally in Spring (without Spring Boot), you have to manually configure many things:
   - bean definitions, data sources, security settings
@@ -65,7 +65,7 @@ public class MyApplication {
 
 #### 🔵 @SpringBootConfiguration
 
-- A specialized form of @Configuration
+- A specialized form of **@Configuration**.
 - Marks the main class as the primary source of bean definitions
 - Tells Spring: This class contains (or imports) configuration for the entire application.
 - Allows defining beans using **@Bean**
@@ -132,3 +132,45 @@ public class MyApplication {
   - Session management
   - Basic authentication
   - Form login
+
+## ➡️ SpringApplication.run(App.class, args)
+
+`SpringApplication.run()` starts Spring by **creating a container for beans**, **automatically configuring required components**, **initializing all objects with dependencies**, and **starting the embedded web server**.
+
+- When `SpringApplication.run(App.class, args)` run,
+- Spring says: “Okay, I will:
+  - Create a container
+  - Read your configuration
+  - Find your classes
+  - Create objects
+  - Connect dependencies
+  - Start the server
+  - And make the app ready”
+
+### 🟦 Creating Application Context
+
+- Spring’s brain + memory
+- Spring creates a central container (box) that will store and manage all your objects.
+
+- When Spring creates the ApplicationContext, it:
+  - Creates an empty container
+  - Decides what type of app it is (web / non-web)
+  - Prepares to store beans
+
+### 🟦 Performing Auto-Configuration
+
+- **@EnableAutoConfiguration**
+- Spring automatically sets up things for you based on what libraries you added.
+- Auto-configuration reduces boilerplate by configuring beans automatically based on classpath and properties
+- added dependencies → Spring configures them.
+
+### 🟦 Initializing All the Beans
+
+- **@ComponentScan**
+- Spring creates objects of your classes and connects them together.
+- Bean initialization includes object creation, dependency injection, and lifecycle callbacks.
+
+### 🟦 Starting Embedded Server
+
+- Spring starts a web server inside your application.
+- Spring Boot starts an embedded server, allowing applications to run as standalone JARs.
