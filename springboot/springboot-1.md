@@ -152,7 +152,7 @@ public class MyApplication {
 - Spring’s brain + memory
 - Spring creates a central container (box) that will store and manage all your objects.
 
-- When Spring creates the ApplicationContext, it:
+- When Spring creates the **ApplicationContext**, it:
   - Creates an empty container
   - Decides what type of app it is (web / non-web)
   - Prepares to store beans
