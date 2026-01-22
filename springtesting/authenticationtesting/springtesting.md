@@ -2,7 +2,7 @@
 
 # ⏺️ Spring Boot Test
 
-- `spring-boot-starter-test` to include testing frameworks like **JUnit**, **Mockito**, and Spring Test for unit and integration testing.
+- `spring-boot-starter-test` = JUnit5 + Mockito + assertj
 
 ### 🟦 Overall Authentication Testing Flow
 
@@ -25,19 +25,18 @@ Validates complete system
 
 - Controller tests ensure the REST API behaves correctly and returns proper HTTP responses.
 - What it tests
-
   - HTTP request & response behavior
   - Request validation (`@Valid`)
   - Correct HTTP status codes
   - JSON structure
   - Exception mapping
+  - mock the service layaer
 
 - What it does NOT test
   - Business logic
   - Database
   - Security internals
 - How it works
-
   - Uses `@WebMvcTest`
   - Uses MockMvc
   - Mocks the service layer
@@ -56,7 +55,6 @@ HTTP Response
 ```
 
 - **Example Explanation (Signup)**
-
   - A POST request is sent to `/auth/signup`
   - Controller receives JSON
   - Validates fields (email, password)
@@ -127,21 +125,19 @@ class AuthControllerTest {
 
 - Service tests ensure authentication logic works correctly without involving HTTP or database.
 - **What it tests**
-
   - Core authentication logic
   - Password encoding
   - Credential validation
   - Exception throwing
   - Token generation logic (mocked)
+  - mocking the repository
 
 - **What it does NOT test**
-
   - HTTP
   - JSON
   - Request/response mapping
 
 - **How it works**
-
   - Uses **@ExtendWith(MockitoExtension.class)**
   - Repository and encoder are mocked
   - No Spring context required
@@ -160,7 +156,6 @@ Return / Exception
 ```
 
 - **Example Explanation (Login)**
-
   - Service receives email & password
   - Fetches user from repository
   - Matches password using encoder
@@ -246,7 +241,6 @@ void login_wrongPassword_shouldThrowException() {
 
 - Integration tests validate the complete authentication flow including security and database
 - **What it tests**
-
   - Full application context
   - Real DB (H2/Testcontainers)
   - Spring Security filters
@@ -254,7 +248,6 @@ void login_wrongPassword_shouldThrowException() {
   - Exception handlers
 
 - **How it works**
-
   - Uses `@SpringBootTest`
   - Uses `@AutoConfigureMockMvc`
   - Minimal mocking
@@ -281,7 +274,6 @@ HTTP Response
 ```
 
 - **Example Explanation**
-
   - Signup API creates user in DB
   - Login API authenticates user
   - JWT token is returned
