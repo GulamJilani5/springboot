@@ -2,22 +2,155 @@
 
 # ⏺️ Query creation: derived queries and native SQL(@Query)
 
+## ➡️ Inbuilt Repository Methods
+
+- from JpaRepository<T, ID>
+
+```java
+// Save
+<S extends T> S save(S entity);
+<S extends T> List<S> saveAll(Iterable<S> entities);
+<S extends T> S saveAndFlush(S entity);
+
+// Read
+Optional<T> findById(ID id);
+boolean existsById(ID id);
+List<T> findAll();
+List<T> findAllById(Iterable<ID> ids);
+long count();
+
+// Delete
+void deleteById(ID id);
+void delete(T entity);
+void deleteAllById(Iterable<? extends ID> ids);
+void deleteAll(Iterable<? extends T> entities);
+void deleteAll();
+
+// Batch
+void flush();
+void deleteAllInBatch();
+void deleteAllByIdInBatch(Iterable<ID> ids);
+
+
+//Pagination & Sorting
+Page<T> findAll(Pageable pageable);
+List<T> findAll(Sort sort);
+```
+
 ## ➡️ Derived query methods:
 
 - Derived queries allow Spring Data JPA to automatically generate JPQL queries based on the method name in your repository interface.
 
 - This is ideal for straightforward CRUD operations and filtering without writing explicit query strings. The framework parses the method name using the JPA 🔴 Criteria API to build the query.
 
-  | **Keyword**      | **Sample Method**                   | **Generated JPQL Snippet**                                                           | **Explanation**                                                                                                   |
-  | ---------------- | ----------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------- |
-  | **And**          | `findByLastnameAndFirstname`        | `… where x.lastname = ?1 and x.firstname = ?2`                                       | Combines multiple conditions with `AND`. Useful for matching multiple fields simultaneously.                      |
-  | **Or**           | `findByLastnameOrFirstname`         | `… where x.lastname = ?1 or x.firstname = ?2`                                        | Combines multiple conditions with `OR`. Any matching condition satisfies the query.                               |
-  | **Between**      | `findByStartDateBetween`            | `… where x.startDate between ?1 and ?2`                                              | Selects records where a field value lies between two given values (inclusive). Common for date or numeric ranges. |
-  | **LessThan**     | `findByAgeLessThan`                 | `… where x.age < ?1`                                                                 | Returns records where the field’s value is less than the specified value. There’s also `LessThanEqual` for `<=`.  |
-  | **StartingWith** | `findByFirstnameStartingWith`       | `… where x.firstname like ?1` → `?1` is appended with `%` automatically              | Matches values that **start with** the given string. Equivalent to `LIKE 'prefix%'`.                              |
-  | **Containing**   | `findByFirstnameContaining`         | `… where x.firstname like ?1` → `?1` is wrapped with `%` on both sides automatically | Matches values that **contain** the given substring. Equivalent to `LIKE '%substring%'`.                          |
-  | **OrderBy**      | `findByAgeOrderByLastnameDesc`      | `… where x.age = ?1 order by x.lastname desc`                                        | Sorts the results by the specified field(s). Can specify multiple fields and directions (ASC/DESC).               |
-  | **In**           | `findByAgeIn(Collection<Age> ages)` | `… where x.age in ?1`                                                                | Matches any record whose field is in the given collection. Useful for bulk lookups (e.g., multiple IDs).          |
+### 🟦 Basic Finders
+
+```java
+Optional<User> findByEmail(String email);
+List<User> findByStatus(String status);
+User getByEmail(String email);
+User readByEmail(String email);
+
+```
+
+### 🟦 Exists & Count
+
+```java
+boolean existsByEmail(String email);
+long countByStatus(String status);
+
+```
+
+### 🟦 AND / OR / NOT
+
+```java
+List<User> findByEmailAndStatus(String email, String status);
+List<User> findByRoleOrStatus(String role, String status);
+List<User> findByStatusNot(String status);
+
+```
+
+### 🟦 String Matching
+
+```java
+List<User> findByNameContaining(String name);
+List<User> findByNameLike(String pattern);
+List<User> findByNameStartingWith(String prefix);
+List<User> findByNameEndingWith(String suffix);
+List<User> findByEmailIgnoreCase(String email);
+
+```
+
+### 🟦 Comparison Operators
+
+```java
+List<User> findByAgeGreaterThan(Integer age);
+List<User> findByAgeGreaterThanEqual(Integer age);
+List<User> findByAgeLessThan(Integer age);
+List<User> findByAgeLessThanEqual(Integer age);
+List<User> findByAgeBetween(Integer start, Integer end);
+
+```
+
+### 🟦 Date Queries
+
+```java
+List<User> findByCreatedDateAfter(LocalDate date);
+List<User> findByCreatedDateBefore(LocalDate date);
+List<User> findByCreatedDateBetween(LocalDate start, LocalDate end);
+
+```
+
+### 🟦 Boolean Conditions
+
+```java
+List<User> findByActiveTrue();
+List<User> findByActiveFalse();
+
+```
+
+### 🟦 NULL Checks
+
+```java
+List<User> findByEmailIsNull();
+List<User> findByEmailIsNotNull();
+
+```
+
+### 🟦 IN / NOT IN
+
+```java
+List<User> findByStatusIn(List<String> statuses);
+List<User> findByStatusNotIn(List<String> statuses);
+
+```
+
+### 🟦 Sorting & Limiting
+
+```java
+List<User> findTop3ByOrderByCreatedDateDesc();
+User findFirstByStatusOrderByIdAsc(String status);
+
+```
+
+### 🟦 Delete / Remove
+
+```java
+void deleteByEmail(String email);
+long deleteByStatus(String status);
+void removeByEmail(String email);
+
+```
+
+### 🟦 Complex Combined Method
+
+```java
+List<User> findTop5ByStatusAndAgeGreaterThanOrderByCreatedDateDesc(
+        String status,
+        Integer age
+);
+
+```
 
 ## ➡️ Custom Query(JPQL) vs native queries:
 
@@ -127,7 +260,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 - Can use any SQL feature your DB supports (functions, CTEs, stored procs, etc.)
 - You can do SELECT, INSERT, UPDATE, DELETE
 - Results can map to:
-
   - Entity classes (if the query selects all entity fields)
   - DTO / Projection interfaces
   - `Object[]` for custom columns
