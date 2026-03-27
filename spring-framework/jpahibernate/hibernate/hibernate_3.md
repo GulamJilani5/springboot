@@ -77,14 +77,11 @@ public class PostService {
 ```
 
 - **What Happens?**
-
   - **1 Query for Posts:**
-
     - `postRepository.findAll()` executes: SELECT \* FROM Post.
     - Let’s say it returns 10 posts.
 
   - **N Queries for Comments:**
-
     - When you call `post.getComments()` in the loop, **Hibernate** lazily loads the comments for each post.
     - For each of the 10 posts, Hibernate runs a query like: `SELECT * FROM Comment WHERE post_id = ?`.
     - That’s 10 additional queries.
@@ -102,40 +99,7 @@ public class PostService {
 
 The goal is to reduce the number of queries, ideally to 1 or 2, by fetching all required data upfront. Here are the main solutions, explained step by step.
 
-### 🟦 Solution 1: Eager Loading with FetchType.EAGER
-
-- Change the fetch strategy to load related data immediately.
-
-```java
-  @Entity
-  public class Post {
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
-        private String title;
-
-        @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
-        private List<Comment> comments;
-        // Getters and setters
-  }
-```
-
-- **What Happens:**
-
-  - When `postRepository.findAll()` runs, **Hibernate** fetches all posts and their comments in one go,  
-     typically using a `JOIN`.
-  - Query example: `SELECT p._, c._ FROM Post p LEFT JOIN Comment c ON p.id = c.post_id`.
-  - Total: 1 query (or sometimes 2, depending on the database).
-
-- **Downside:**
-
-  - Eager loading fetches comments even if you don’t need them, wasting resources.
-  - Not ideal for all cases, as it can load too much data unnecessarily.
-
-- **When to Use:**
-  - Small datasets or when you always need the related data. Like comments with the Post data.
-
-### 🟦 Solution 2: Fetch Joins with JPQL or Spring Data JPA
+### 🟦 Solution 1: Fetch Joins with JPQL or Spring Data JPA
 
 - Use a JPQL query with a JOIN FETCH to explicitly fetch posts and comments in one query.
 - Create a **Custom Query** in **Repository:**
@@ -167,20 +131,18 @@ The goal is to reduce the number of queries, ideally to 1 or 2, by fetching all 
 ```
 
 - **What Happens:**
-
   - JOIN FETCH tells Hibernate to fetch posts and their comments in one query.
     Example SQL: SELECT p._, c._ FROM Post p LEFT JOIN Comment c ON p.id = c.post_id.
     Total: 1 query.
 
 - **Benefits:**
-
   - Explicit control over what’s fetched.
   - Works with FetchType.LAZY, so you don’t need to change the entity.
 
 - **When to Use:**
   - Best for specific endpoints where you need related data.
 
-### 🟦 Solution 3: Entity Graph
+### 🟦 Solution 2: Entity Graph
 
 - Spring Data JPA’s `@EntityGraph` lets you define which relationships to fetch eagerly, overriding the default `FetchType.LAZY`.
 - Add **Entity Graph** to **Repository**:
@@ -194,12 +156,10 @@ The goal is to reduce the number of queries, ideally to 1 or 2, by fetching all 
 ```
 
 - What Happens:
-
   - **@EntityGraph(attributePaths = {"comments"})** tells Hibernate to fetch the comments collection along with posts.
   - Similar to `JOIN FETCH`, it results in 1 query.
 
 - Alternative with Named **Entity Graph:**
-
   - Define a reusable graph in the entity:
 
   ```java
@@ -224,7 +184,7 @@ The goal is to reduce the number of queries, ideally to 1 or 2, by fetching all 
 - When to Use:
   - When you want a declarative, reusable way to avoid N+1.
 
-### 🟦 Solution 4: Batch Fetching
+### 🟦 Solution 3: Batch Fetching
 
 Hibernate can batch related data queries to reduce the number of queries.
 
@@ -237,13 +197,11 @@ Hibernate can batch related data queries to reduce the number of queries.
 ```
 
 - **What Happens:**
-
   - Instead of 1 query per post, Hibernate fetches comments for multiple posts in batches.
   - Example: For 100 posts, it might run 1 query for posts + 1 query for comments of 100 posts (using IN clause: `SELECT \* FROM Comment WHERE post_id IN (?, ?, ?, ...)`).
   - Total: 2 queries instead of 101.
 
 - **Benefits:**
-
   - Works with lazy loading, so no need to change fetch type.
   - Good middle ground for large datasets.
 
@@ -275,12 +233,10 @@ Hibernate can batch related data queries to reduce the number of queries.
 ```
 
 - **Benefits:**
-
   - Full control over the query.
   - Can optimize for very specific cases.
 
 - **Downsides:**
-
   - Loses JPA’s automatic mapping.
   - More manual work to handle results.
 

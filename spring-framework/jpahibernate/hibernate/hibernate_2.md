@@ -4,6 +4,35 @@
 
 # ➡️ Eager Loading
 
+- Change the fetch strategy to load related data immediately.
+
+```java
+  @Entity
+  public class Post {
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
+        private String title;
+
+        @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+        private List<Comment> comments;
+        // Getters and setters
+  }
+```
+
+- **What Happens:**
+  - When `postRepository.findAll()` runs, **Hibernate** fetches all posts and their comments in one go,  
+     typically using a `JOIN`.
+  - Query example: `SELECT p._, c._ FROM Post p LEFT JOIN Comment c ON p.id = c.post_id`.
+  - Total: 1 query (or sometimes 2, depending on the database).
+
+- **Downside:**
+  - Eager loading fetches comments even if you don’t need them, wasting resources.
+  - Not ideal for all cases, as it can load too much data unnecessarily.
+
+- **When to Use:**
+  - Small datasets or when you always need the related data. Like comments with the Post data.
+
 - Associated entities are loaded immediately along with the parent entity, typically using JOINs in a single query.
 - **Default Behavior:** Eager for @ManyToOne and @OneToOne (non-optional side).
 - **Advantages:** Avoids additional queries; all data is available upfront, preventing exceptions in detached states.
@@ -11,17 +40,6 @@
   - Can load unnecessary data, leading to higher memory use and slower initial queries (Cartesian products in complex graphs).
   - Can lead to performance issues (N+1 problem, unnecessary joins).
 - Configured with `fetch = FetchType.EAGER`.
-
-```java
-    @Entity
-    public class Department {
-        @OneToMany(mappedBy = "department", fetch = FetchType.EAGER)
-        private List<Employee> employees;
-    }
-
-```
-
-- When **Department** is fetched, all **Employees** are also loaded immediately.
 
 # ➡️ Lazy Loading
 
