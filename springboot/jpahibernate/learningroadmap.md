@@ -2,7 +2,7 @@
 
 # Roadmap for learning ORM, JPA, Hibernate and Spring data JPA
 
-## ➡️ Core JPA & ORM concepts (must understand deeply)
+### ➡️ Core JPA & ORM concepts (must understand deeply)
 
 - **ORM idea:** map classes/objects → tables/rows and manage object identity, relationships, and lifecycle.
 - **JPA vs Hibernate:** JPA = specification (APIs & annotations). Hibernate = one popular implementation (adds extras).
@@ -11,7 +11,7 @@
 - **Flush vs Commit:** flush() writes SQL to DB but transaction not committed; commit flushes and commits.
 - **Transactions:** JTA/JDBC transactions; in Spring use @Transactional. Understand propagation and readOnly flags.
 
-## ➡️ Mappings & relationships — hands-on essentials (JPA)
+### ➡️ Mappings & relationships — hands-on essentials (JPA)
 
 - @OneToOne, @OneToMany, @ManyToOne, @ManyToMany.
 - mappedBy (pick owning side) and @JoinColumn / @JoinTable.
@@ -21,7 +21,7 @@
 - @Version for optimistic locking.
 - Inheritance strategies: SINGLE_TABLE, JOINED, TABLE_PER_CLASS.
 
-## ➡️ Querying: JPQL, Criteria, native, projections(JPA)
+### ➡️ Querying: JPQL, Criteria, native, projections(JPA)
 
 - **JPQL (HQL):** object-oriented SQL: SELECT b FROM Book b WHERE b.title LIKE :t.
 - **Criteria API:** type-safe, programmatic queries (useful for dynamic queries).
@@ -29,7 +29,7 @@
 - **Spring Data Projections:** interface or DTO projections; select new com.example.dto.UserDto(u.id, u.name) for DTO construction.
 - **Paging & Sorting:** Pageable, Page<T>, Sort.
 
-## ➡️ Spring Data JPA — the productivity layer
+### ➡️ Spring Data JPA — the productivity layer
 
 - JpaRepository<T, ID> gives CRUD, paging, sorting out of the box.
 - Method name query derivation: findByLastNameAndAgeGreaterThan(...).
@@ -37,7 +37,7 @@
 - Custom repository implementations for complex logic.
 - @EntityGraph or JOIN FETCH in @Query to avoid N+1.
 
-## ➡️ Common pitfalls & debugging checklist (learn to recognize & fix)(JPA)
+### ➡️ Common pitfalls & debugging checklist (learn to recognize & fix)(JPA)
 
 - **LazyInitializationException:** accessing lazy relation outside transaction. Fix: keep transactional boundary, fetch join, or DTO projection.
 - **N+1 queries:** detect with SQL logs; fix with JOIN FETCH, @EntityGraph, or batch fetching.
@@ -48,7 +48,7 @@
 - **Unclosed transactions / leaks:** monitor connection pool and transaction logs.
 - **Schema drift:** use Flyway/Liquibase for migrations, not `ddl-auto=update` in production.
 
-## ➡️ Performance & scaling tips
+### ➡️ Performance & scaling tips
 
 - Enable batching: spring.jpa.properties.hibernate.jdbc.batch_size=50 and use SEQUENCE strategy for IDs where possible.
 - Use DTO queries for read-heavy endpoints to avoid heavy entity graphs.
@@ -57,7 +57,7 @@
 - Consider second-level cache (EHCache / Infinispan) carefully (cache invalidation complexities).
 - Monitor with SQL logs, metrics, and DB monitoring tools.
 
-## ➡️ Advanced topics (what to explore later)
+### ➡️ Advanced topics (what to explore later)
 
 - Second-level & query caches.
 - Custom Hibernate types and AttributeConverter.
