@@ -1,8 +1,74 @@
 🔵🟢🔴➡️⭕🟠🟦🟣🟥🟧✔️⏺️ ☑️ • ‣ → ⁕
 
-# ⏺️ Spring Boot Application Lifecycle - From Start to Finish
+# ⏺️ Spring Boot Application Lifecycle - From Start to Finish & Flow
 
-Ever wondered what happens when you start & stop a Spring Boot application?
+## ➡️ Spring Boot Flow
+
+```java
+main()
+ ↓
+SpringApplication.run()
+ ↓
+Create SpringApplication instance
+ ↓
+Read @SpringBootApplication
+ - Enables:
+   @Configuration
+   @ComponentScan
+   @EnableAutoConfiguration
+ (⚠️ Only enables features, does NOT execute them)
+ ↓
+Determine Application Type
+ (Servlet / Reactive / Non-Web)
+ ↓
+Prepare Environment
+ - Load application.properties / application.yml
+ - Load profiles (dev/prod)
+ - Load OS env variables
+ - Load command-line arguments
+ ↓
+Create ApplicationContext (EMPTY container)
+ ↓
+Apply Initializers (ApplicationContextInitializer)
+ - Modify context before startup
+ ↓
+🔴 Refresh ApplicationContext (CORE EXECUTION PHASE)
+   ↓
+   1. Load Bean Definitions
+      - Component Scanning (@ComponentScan)
+      - Read @Configuration classes
+   ↓
+   2. Auto-Configuration
+      - Triggered by @EnableAutoConfiguration
+      - Uses classpath + properties
+   ↓
+   3. BeanFactory Post Processing
+      - Modify bean definitions
+   ↓
+   4. Bean Instantiation
+      - Create beans (Singleton by default)
+      - Dependency Injection (Constructor/Field/Setter)
+   ↓
+   5. Bean Post Processing
+      - BeanPostProcessor
+      - @PostConstruct
+      - AOP Proxy creation
+ ↓
+Start Embedded Server (Tomcat/Jetty/Undertow)
+ ↓
+Publish Events (Listeners execute)
+ - ApplicationStartedEvent
+ - ApplicationReadyEvent
+ ↓
+Run CommandLineRunner / ApplicationRunner
+ ↓
+✅ Application Fully Started (READY TO SERVE REQUESTS)
+
+```
+
+## ➡️ Spring Boot Lifecycle
+
+- Ever wondered what happens when you start & stop a Spring Boot application?
 
 ## ➡️ Startup Phase
 
