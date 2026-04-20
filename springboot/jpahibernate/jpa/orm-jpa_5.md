@@ -16,7 +16,6 @@ Instead, you should use their wrapper equivalents:
 ### ➡️ Avoid confusing default values
 
 - Primitives auto-initialize:
-
   - int age = 0;
   - boolean active = false;
 
@@ -29,7 +28,6 @@ This causes logic bugs.
 ### ➡️ Hibernate works better with wrappers
 
 - Hibernate can:
-
   - lazy-load
   - proxy objects
   - detect dirty fields
@@ -42,3 +40,24 @@ This causes logic bugs.
 Annotations like: `@NotNull, @Min, @Max` Only make sense when the field can actually be `NULL`.
 
 Applying **@NotNull** on an `int` is meaningless, because it can never be null.
+
+# ⏺️ Application is slow due to JPA - how do you improve performance?
+
+- Find ``
+- Use DTO Projection
+
+- Solve N+1 Query Problem
+
+- Use LAZY Loading Properly
+
+- Add Indexes in Database
+
+- Pagination (Very Important)
+
+- Use Caching (1st & 2nd Level)
+
+- Avoid Unnecessary save() Calls
+
+- Use Bulk Updates Instead of Loop
+
+- Optimize Transactions
