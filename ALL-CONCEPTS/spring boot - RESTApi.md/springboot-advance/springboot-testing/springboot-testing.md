@@ -1,8 +1,6 @@
 ⏺️ ➡️ 🟦 🔵 🟢 🔴 ⭕ 🟠 🟣 🟥 🟧 ✔️ ☑️ • ‣ → ⁕
 
-# ⏺️ Advance Concepts/Interview Questions
-
-## ➡️ Spring Testing
+# ⏺️ Spring Testing
 
 #### 🟦 Concepts
 
@@ -19,40 +17,4 @@ Find `https://github.com/GulamJilani5/springboot/tree/main/springtesting`
 - ###### 🔵 How do you test a REST Controller using MockMVC.
 
 - ###### 🔵 How do you mock external services using Mockito.
-- ###### 🔵
-
-## ➡️
-
-#### 🟦 Concepts
-
-- ###### 🔵
-- ###### 🔵
-
-#### 🟦 Interview questions
-
-- ###### 🔵
-- ###### 🔵
-
-## ➡️
-
-#### 🟦 Concepts
-
-- ###### 🔵
-- ###### 🔵
-
-#### 🟦 Interview questions
-
-- ###### 🔵
-- ###### 🔵
-
-## ➡️
-
-#### 🟦 Concepts
-
-- ###### 🔵
-- ###### 🔵
-
-#### 🟦 Interview questions
-
-- ###### 🔵
 - ###### 🔵
