@@ -301,7 +301,7 @@ public class UserService {
         headers.setBearerAuth("your-token-here");
         headers.set("X-Request-ID", "12345");
 
-        // 🔁 Mapping (internal → external)
+        // 🔁 Body - Mapping (internal → external)
         ExternalUserRequestDTO externalDto = UserMapper.toExternal(userRequestDTO);
 
         // 📦 HttpEntity
