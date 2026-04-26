@@ -189,23 +189,4 @@ public class SecurityHeaderFilter implements Filter {
     }
 }
 ```
-##### 🟦
-```java
 
-```
-##### 🟦
-```java
-
-```
-##### 🟦
-```java
-
-```
-##### 🟦
-```java
-
-```
-##### 🟦
-```java
-
-```
