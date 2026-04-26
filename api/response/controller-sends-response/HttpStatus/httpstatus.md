@@ -149,11 +149,72 @@ if (actual.isSameCodeAs(expected)) {
 
 ### ➡️ ResponseEntity
 
-- Static Convenience Methods
+- It Static Convenience Methods
+##### 🟦 status() → Full Control
+
+```java
+ResponseEntity.ok() or ResponseEntity.ok(body)
+```
+- Internally this is just a shortcut for:
+```java
+return ResponseEntity.status(HttpStatus.OK)
+                     .body(body);
+```
+- You explicitly control status
+- Works with dynamic/custom status codes
+
+```text
+70% → ok(), created(), badRequest()
+30% → status() (dynamic cases)
+```
+##### 🟦 Some Example
+
+- ###### 🔵 Simple success → clean code
+```java
+return ResponseEntity.ok(response);
+```
+- ###### 🔵 Conditional status
+```java
+if (failed) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+}
+return ResponseEntity.ok(success);
+```
+- ###### 🔵 Creation API
+```java
+return ResponseEntity
+        .created(URI.create("/transactions/" + txnId))
+        .body(response);
+```
+- ###### 🔵 Dynamic status from service layer
+```java
+HttpStatus status = service.getStatus();
+
+return ResponseEntity
+        .status(status)
+        .body(response);
+```
+- ###### 🔵 Complex flows
+```java
+return ResponseEntity
+        .status(transactionResult.getHttpStatus())
+        .body(response);
+```
+- ###### 🔵 Custom status codes (rare but possible)
+```java
+return ResponseEntity
+        .status(HttpStatusCode.valueOf(422))
+        .body(error);
+```
+- ###### 🔵 Heavy header manipulation
+```java
+return ResponseEntity
+        .status(HttpStatus.OK)
+        .header("X-TXN-ID", txnId)
+        .body(response);
+```
 
 ##### 🟦 200
-
-- `ResponseEntity.ok() or ResponseEntity.ok(body)`
 - `ResponseEntity.created(location)`
 - `ResponseEntity.accepted()`
 
