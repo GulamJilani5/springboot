@@ -1,16 +1,11 @@
-### ➡️ Credentials
+⏺️ ➡️ 🟦 🟩 🟢 🔵 🔷 🔹🔴 ☑️ ✔️ ✓→•←⁕⁂※⁜‣
 
-The server can send credentials or manage authentication in responses.
+# ⏺️ Credentials
+- The server can send credentials or manage authentication in responses.
 
-##### 🟦 What Can Be Sent:
+### ➡️ Cookies
 
-- **Cookies:** For session-based authentication (Set-Cookie header).
-- **Tokens:** Returned in the body (e.g., JWT after login) or headers.
-- **CSRF Tokens:** For protecting against cross-site request forgery.
-
-##### 🟦 How to Send in Spring Boot:
-
-- **🔵Cookies:**
+- For session-based authentication (Set-Cookie header).
 
 ```java
 
@@ -29,11 +24,22 @@ cookie.setMaxAge(3600);
 
         return new ResponseEntity<>("Login successful", headers, HttpStatus.OK);
     }
-
 }
 ```
 
-- **🔵JWT Token in Body:**
+
+##### 🟦 Constraints:
+
+Use HttpOnly and Secure flags for cookies to prevent XSS and ensure HTTPS.
+Avoid sending sensitive data in headers unless necessary.
+Include CORS headers (Access-Control-Allow-Credentials) for cookie-based auth.
+
+
+
+### ➡️ Tokens
+- Returned in the body (**e.g.**, JWT after login) or headers.
+- Token can be send in Body or header.
+- Here it is send in body
 
 ```java
   @PostMapping("/login")
@@ -44,26 +50,12 @@ cookie.setMaxAge(3600);
   }
 ```
 
-##### 🟦 Constraints:
 
-Use HttpOnly and Secure flags for cookies to prevent XSS and ensure HTTPS.
-Avoid sending sensitive data in headers unless necessary.
-Include CORS headers (Access-Control-Allow-Credentials) for cookie-based auth.
 
-4. Additional Configurations
-   The server can include additional response components:
-
-##### 🟦 Status Codes: Set explicitly to indicate the result.
-
-java@PostMapping("/users")
-public ResponseEntity<User> createUser(@RequestBody User user) {
-return new ResponseEntity<>(user, HttpStatus.CREATED); // 201 Created
-}
-
-##### 🟦 CORS Configuration:
+### ➡️ CORS Configuration:
+- For protecting against cross-site request forgery.
 
 ```java
-
 javaimport org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -79,9 +71,9 @@ return List.of(new User("john_doe"));
 
 ```
 
-#### 🟦 Pagination:
+### ➡️ Pagination:
 
-Use headers or body to provide pagination metadata.
+- Use headers or body to provide pagination metadata.
 
 ```java
 
@@ -98,9 +90,9 @@ headers.add("Link", "<next_page_url>; rel=\"next\"");
 
 ```
 
-##### 🟦 Rate Limiting:
+### ➡️ Rate Limiting:
 
-Use headers to inform clients of limits.
+- Use headers to inform clients of limits.
 
 ```java
     headers.add("X-Rate-Limit-Remaining", "99");
