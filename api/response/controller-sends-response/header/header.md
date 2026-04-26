@@ -134,6 +134,7 @@ X-App-Version: 1.0
 ```
 
 ### ➡️ How to Return Headers in Spring Boot
+
 ##### 🟦 Using ResponseEntity (BEST PRACTICE)
 ```java
 @GetMapping("/user")

@@ -45,7 +45,10 @@ httpMethod.name()
 
 - The actual payload/data sent by the client in the HTTP request
   - JSON, XML, form data, etc.
-
+- The `Content-Type` header in the headers section tells what kind of data is in the body.
+- Body can be few bytes (small JSON) or many megabytes (file upload, video, etc.).
+- `GET`, `HEAD`, `DELETE` → Usually no body in request
+- `POST`, `PUT`, `PATCH` → Usually have body in request (because you are sending data)
 ```java
 UserRegistrationRequest body = requestEntity.getBody();
 if (body != null) {
