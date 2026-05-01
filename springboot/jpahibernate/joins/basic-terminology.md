@@ -6,9 +6,9 @@
 
 - “Owner side is the one who holds the key of the relationship.”
 - The owner side is the side of the relationship that controls the foreign key (**FK**) in the database.
-
-  - The owner side writes/updates the relationship in the DB.
-  - It must use `@JoinColumn` or `@JoinTable`.
+- It is the ONLY side JPA uses when saving/updating the relationship
+- The owner side writes/updates the relationship in the DB.
+- It must use `@JoinColumn` or `@JoinTable`.
 
 - magine a marriage relationship:
   - If Husband keeps the house keys, he “owns” the house access.
@@ -16,9 +16,23 @@
 - Similarly, only owner side has the FK key.
 
 ```java
-  @ManyToOne
-@JoinColumn(name = "customer_id")  // FK lives here
-private Customer customer;
+  import jakarta.persistence.*;
+
+@Entity
+public class Comment {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String review;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id") // 🔥 FK lives here
+    private Post post;
+
+    // getters & setters
+}
 
 ```
 
@@ -31,9 +45,35 @@ private Customer customer;
 - It only refers to the owner using `mappedBy`.
 
 ```java
-  @OneToMany(mappedBy = "customer")
-private List<Order> orders;
+import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
+@Entity
+public class Post {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String title;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
+    // 🔥 Helper method (VERY IMPORTANT)
+    public void addComment(Comment comment) {
+        comments.add(comment);
+        comment.setPost(this);
+    }
+
+    public void removeComment(Comment comment) {
+        comments.remove(comment);
+        comment.setPost(null);
+    }
+
+    // getters & setters
+}
 ```
 
 - `Customer` is inverse side (does not have FK).
