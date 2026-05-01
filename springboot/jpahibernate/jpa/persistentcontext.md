@@ -2,7 +2,7 @@
 
 # ⏺️ Persistence Context in JPA
 
-The Persistence Context is a first-level cache maintained by the EntityManager (or Hibernate Session) that tracks all managed entity instances and their states during a transaction.
+- The Persistence Context is a first-level cache maintained by the **EntityManager** (or Hibernate Session) that tracks all managed entity instances and their states during a transaction.
 
 ### ➡️ Key Responsibilities
 

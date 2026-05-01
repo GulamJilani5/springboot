@@ -216,11 +216,8 @@ session.close();
 
 ### 🟦 Transaction
 
-Ensures atomic operations — commit or rollback changes.
-
-```java
-
-```
+- It's Transactional
+- Ensures atomic operations — commit or rollback changes.
 
 ### 🟦 Query / Criteria
 
