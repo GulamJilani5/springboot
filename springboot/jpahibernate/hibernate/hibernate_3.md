@@ -262,10 +262,10 @@ public class PostService {
    List<Post> findAll();
   ```
 
-- Benefits:
+- **Benefits:**
   - Cleaner and reusable compared to JPQL.
   - Flexible for different fetch scenarios.
-- When to Use:
+- **When to Use:**
   - When you want a declarative, reusable way to avoid N+1.
 
 ### 🟦 Solution 3: DTO Projection in JPA
