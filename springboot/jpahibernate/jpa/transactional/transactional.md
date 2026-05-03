@@ -2,12 +2,40 @@
 
 # ⏺️ @Transactional
 
-- Find more about `@Transactional` in the `transactional.jpeg`.
-  Spring automatically wraps the method in a **proxy object** (using **JDK Dynamic Proxy or CGLIB**) that handles the transaction lifecycle.
+- Mainly used of single db
+- It should
+
+##### 🟦 Spring boot implementation
+
+- It is an implementations of the ACID proerties in the spring boot.
+- It is used in the Service layer (on class or method, as needed)
+- It should be called from another class (e.g., controller or another service) to work properly
+- Spring automatically wraps the method in a **proxy object** (using **JDK Dynamic Proxy or CGLIB**) that handles the transaction lifecycle.
 - This process include:
   - **Opening a transaction** before the method executes.
   - **Committing the transaction** if the execution is successful.
   - **Rolling back the transaction** automatically if an exception occurs.
+
+### ➡️ @Transaction vs Saga Pattern
+
+##### 🟦 @Transaction
+
+- Handles data consistency within a single service
+- Typically single database (multiple tables allowed)
+- Uses rollback
+- **ACID** = properties of a transaction (Atomicity, Consistency, Isolation, Durability)
+  - @Transactional = Spring’s way to apply those properties to database operations
+- All or nothing (atomic) → if any step fails, everything is rolled back instantly
+
+##### 🟦 Saga Pattern
+
+- Handles consistency across multiple services (microservices)
+- Works with multiple databases
+- Uses compensating actions (not rollback)
+- Follows eventual consistency
+- Step-by-step execution → if a step fails, previous successful steps are undone via compensation
+
+### ➡️ Example
 
 ```java
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +64,10 @@ public class OrderService {
 - When called, Spring creates a proxy that opens a transaction before `orderRepository.save(order)` executes.
 - If an exception (e.g., negative amount) is thrown, the transaction rolls back automatically. Otherwise, it commits after successful execution.
 
-## ➡️ Advantage
+##### 🟦 Common Pitfall
 
-A key advantage is that Spring handles all the boilerplate code for connection handling, commit, and rollback through the **TransactionInterceptor** and **PlatformTransactionManager**, making database operations safe and atomic without manual intervention.
-
-## ➡️ Common Pitfall
-
-However, a common pitfall to mention is that if a @Transactional method is called from another method within the same class, the proxy mechanism doesn’t intercept it, resulting in no transaction. To avoid this, you should move the method to a different bean or call it through the Spring proxy.
+- However, a common pitfall to mention is that if a @Transactional method is called from another method within the same class, the proxy mechanism doesn’t intercept it, resulting in no transaction.
+- To avoid this, we should call @Transactional method from the different class(Service or Controller).
 
 ```java
 import org.springframework.stereotype.Service;
@@ -64,12 +89,31 @@ public class OrderService {
 }
 ```
 
-- Here, createOrder calls saveOrder internally within the same class.
-- Since the call is not intercepted by the Spring proxy (which only works for external calls to the bean), no transaction is started, and saveOrder executes without transactional support. This can lead to inconsistent data if an exception occurs
+- Here, **createOrder** calls **saveOrder** internally within the same class.
+- Since the call is not intercepted by the Spring proxy, no transaction is started, and **saveOrder** executes without transactional support. This can lead to inconsistent data if an exception occurs.
 
-### 🟦 Fix for the Pitfall
+##### 🟦 Fix 1
 
-- To resolve this, move saveOrder to a different service or call it through the proxy:
+- Highly recommended approach as it is clean and **@Transational** method will follow the **ACID** properties.
+- Move transactional method to another service.
+
+```java
+@Service
+public class OrderService {
+
+    @Autowired
+    private PaymentService paymentService;
+
+    public void createOrder(String orderId, double amount) {
+        paymentService.saveOrder(orderId, amount); // ✅ goes via proxy
+    }
+}
+```
+
+##### 🟦 Fix 2 ⭕
+
+- Not preferred in clean architecture, Can confuse design ⭕
+- To resolve this, move **saveOrder** to a different service or call it through the proxy:
 
 ```java
   @Service
@@ -92,11 +136,15 @@ public class OrderService {
 
 - Using **self** ensures the call goes through the proxy, enabling transactional behavior.
 
-## ➡️ Does @Transactional(readOnly = true) prevent dirty checking?
+##### 🟦 Advantage of @Transactional
+
+- A key advantage is that Spring handles all the boilerplate code for connection handling, commit, and rollback through the **TransactionInterceptor** and **PlatformTransactionManager**, making database operations safe and atomic without manual intervention.
+
+### ➡️ Does @Transactional(readOnly = true) prevent dirty checking?
 
 Yes — it effectively prevents dirty checking because Hibernate does NOT perform dirty checking for read-only transactions.
 
-### 🟦 Extra Performance Hibernate Doesn’t Need to Spend
+##### 🟦 Extra Performance Hibernate Doesn’t Need to Spend
 
 | Performance Cost                    | Required in readOnly? |
 | ----------------------------------- | --------------------- |
@@ -114,15 +162,12 @@ Yes — it effectively prevents dirty checking because Hibernate does NOT perfor
 
 - Default behavior in Spring.
 - If a transaction already exists:
-
   - The method joins the existing transaction.
 
 - If no transaction exists:
-
   - A new transaction is started.
 
 - Rollback behavior:
-
   - If the outer transaction rolls back, everything inside (including this method) also rolls back.
 
 - Use case:
@@ -147,21 +192,17 @@ Yes — it effectively prevents dirty checking because Hibernate does NOT perfor
 - Always starts a new, independent transaction.
 
 - If a transaction already exists:
-
   - The existing transaction is suspended.
   - A new transaction is created for this method.
 
 - When this method completes:
-
   - The new transaction is committed or rolled back independently of the outer transaction.
   - The outer transaction is then resumed.
 
 - Rollback behavior:
-
   - Rollback in the outer transaction does not affect this inner transaction.
 
 - Use case:
-
   - When you want a method to commit changes regardless of the outer transaction’s outcome.
   - **Example:** Logging, audit trails, sending notifications — things that should persist even if the main business transaction fails.
 
