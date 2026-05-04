@@ -11,7 +11,7 @@
 - **Cascading** is specified using the `@Cascade` annotation (in Hibernate) or the cascade attribute in JPA relationship annotations like **@OneToMany** or **@ManyToOne** etc.
 - Without cascading, operations on the parent won't affect children, potentially leading to errors like **EntityNotFoundException** or **orphaned records**.
 
-## ➡️ Cascade Types in JPA
+### ➡️ Cascade Types in JPA
 
 - **PERSIST** → Save children
 - **MERGE** → Update children
@@ -29,7 +29,7 @@
 | **DETACH**   | Propagates the `detach()` operation, removing children from the persistence context.                                 | When detaching objects for serialization or sending outside persistence context. | Detaching an `Order` also detaches its `OrderItems`.                               |
 | **ALL**      | Applies **all** cascade operations (`PERSIST`, `MERGE`, `REMOVE`, `REFRESH`, `DETACH`).                              | When child life cycle is completely dependent on the parent.                     | An `Order` fully manages `OrderItems` for create, update, delete, refresh, detach. |
 
-## ➡️ Best Practice Tips
+### ➡️ Best Practice Tips
 
 | Scenario                                                                                      | Recommended Cascade        |
 | --------------------------------------------------------------------------------------------- | -------------------------- |
@@ -37,13 +37,13 @@
 | Parent & child inserted together but deletion should not delete child (e.g., Student–Courses) | `PERSIST` & `MERGE` only   |
 | Shared child referenced by multiple parents (e.g., Roles, Categories)                         | ❌ Do **NOT** use `REMOVE` |
 
-## ➡️ Why can using CascadeType.ALL sometimes cause data loss?
+### ➡️ Why can using CascadeType.ALL sometimes cause data loss?
 
 - CascadeType.ALL means “whatever happens to the parent should also happen to the child.”
   - That includes: PERSIST, MERGE, REFRESH, DETACH, REMOVE ← this is the dangerous one
 - When you blindly apply `CascadeType.ALL`, you unintentionally give Hibernate permission to delete child records whenever the parent is deleted OR whenever a parent-child relationship changes And that’s where data loss happens.
 
-### 🟦 Root Causes of Data Loss
+#### 🟦 Root Causes of Data Loss
 
 ##### 🔵 Unintended child deletion (REMOVE cascades down)
 
@@ -89,16 +89,14 @@ private List<OrderItem> items;
 deletes every address row from the database permanently.
 Even if you just wanted to update the list → gone.
 
-### 🟦 Use it only when the child entity truly depends on the parent and should live + die WITH the parent.
+#### 🟦 Use it only when the child entity truly depends on the parent and should live + die WITH the parent.
 
 - **Good use cases:**
-
   - Order → OrderItems
   - Blog → Comments
   - Invoice → LineItems
 
 - **Bad use cases:**
-
   - User → Roles
   - User → Address (sometimes shared)
   - Employee → Department
