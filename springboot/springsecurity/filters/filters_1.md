@@ -116,3 +116,33 @@
   - calculateTime()
 
 - This violates the DRY (Don't Repeat Yourself) principle.
+
+### ➡️ Two ways to register a Filter
+
+- In both approaches, we must have a Filter implementation.
+
+###### 🔵 Think of it like this
+
+- You buy a security guard (your LoggingFilter).
+- Now you have two ways to assign him:
+  - Automatic assignment (default)
+    - "Guard, stand at the main entrance and check everyone."
+  - Manual assignment (FilterRegistrationBean)
+    - "Guard, stand only at the VIP entrance (/admin/\*) and work before the CCTV guard."
+- The guard is the same. Only the assignment changes.
+
+##### 🟦 1. Implement Filter interface
+
+- Spring Boot automatically registers it.
+- By default, it applies to all URL patterns (/\*).
+- Best when you want the Filter to run for every request.
+
+##### 🟦 2. FilterRegistrationBean
+
+- We still have a class that implements Filter.
+- It is only a registration/configuration mechanism.
+- It lets you configure:
+  - Specific URL patterns (/api/_, /admin/_)
+  - Filter order
+  - Filter name
+  - Enable/disable registration
