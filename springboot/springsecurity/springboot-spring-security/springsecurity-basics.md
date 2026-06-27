@@ -3,7 +3,7 @@
 
 # ⏺️ Spring Security
 
-Provides comprehensive security services, including `authentication`, `authorization`, and protection against common vulnerabilities like `CSRF`, `XSS`, `session fixation`, and more.
+- Provides comprehensive security services, including `authentication`, `authorization`, and protection against common vulnerabilities like `CSRF`, `XSS`, `session fixation`, and more.
 
 ## ➡️ Spring Security Dependecny
 
@@ -80,15 +80,5 @@ Provides comprehensive security services, including `authentication`, `authoriza
 
 ```
 
-flowchart TD
-    A[Client Request] --> B[Security Filter Chain]
-    B --> C[Authentication Filter (JWT / Basic / Form)]
-    C --> D[Authentication Manager]
-    D --> E[UserDetailsService & PasswordEncoder]
-    E --> F[Authentication Successful]
-    F --> G[Store in SecurityContext]
-    G --> H[Authorization Manager - Check Roles/Permissions]
-    H --> I[Controller - Business Logic]
-    I --> J[Response Back to Client]
 
 ```
