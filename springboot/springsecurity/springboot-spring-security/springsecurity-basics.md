@@ -77,8 +77,3 @@
 | **JWT/OAuth2**            | Uses tokens for stateless authentication in secure API access.                    | REST APIs, Single Page Applications (SPAs)                               |
 | **@PreAuhtorize**         | supports complex expressions (SpEL) for advanced authorization logic.             | `Flexible Rule`, `                                                       |
 | **@Secured**              | Simpler syntax for basic role checks                                              | Must enable with `@EnableGlobalMethodSecurity(securedEnabled = true)`, ` |
-
-```
-
-
-```

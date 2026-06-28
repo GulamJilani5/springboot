@@ -1,11 +1,11 @@
-⏺️ ➡️ 🟦 🟩 🟢 🔵 🔷 🔹🔴 ☑️ ✔️ ✓→•←⁕⁂※⁜‣
+⏺️ ➡️ 🟦 🟩 🟢 🔵 🔷 🔹🔴 ☑️ ✔️ ✓ → • ← ⁕ ⁂ ※ ⁜‣
 
 # ⏺️ Login - Username/Password
 
 ```text
 POST /user/login
 
-1. SecurityFilterChain
+1. SecurityConfig -- SecurityFilterChain
    -> checks endpoint permission (permitAll for login)
 
 2. JwtAuthFilter
@@ -17,7 +17,7 @@ POST /user/login
     4. AuthenticationManager
        -> delegates to AuthenticationProvider (DaoAuthenticationProvider)
 
-    5. DaoAuthenticationProvider (internally used by Spring)
+    5. DaoAuthenticationProvider (internally used by Spring, not defined by us)
        -> UserDetailsService.loadUserByUsername(username)
        -> PasswordEncoder.matches(password, DB password)
 
