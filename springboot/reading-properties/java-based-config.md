@@ -45,9 +45,9 @@ app.application-id → applicationId
 
 ### ➡️ Registering the configuration object
 
-- There are two common approaches you were asking about earlier:
+- There are two common approaches:
 
-##### 🟦 @EnableConfigurationProperties
+##### 🟦 1. @EnableConfigurationProperties
 
 - Used in a @Configuration class:
 
@@ -64,10 +64,10 @@ public class AppConfig {
 @EnableConfigurationProperties(AppProperties.class, AnotherObject.class, AnotherObject.class)
 ```
 
-##### 🟦 @ConfigurationPropertiesScan
+##### 🟦 2. @ConfigurationPropertiesScan
 
 - Placed on the main application class
-- Spring, scan the project and automatically find my @ConfigurationProperties classes
+- Spring, scan the project and automatically find **@ConfigurationProperties** classes
 
 ```java
 @SpringBootApplication
