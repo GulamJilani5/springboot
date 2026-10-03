@@ -49,7 +49,7 @@ app.application-id → applicationId
 
 ##### 🟦 1. @EnableConfigurationProperties
 
-- Used in a @Configuration class:
+- Used in a **@Configuration** class:
 
 ```java
 @Configuration
