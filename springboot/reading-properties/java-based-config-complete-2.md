@@ -152,6 +152,7 @@ public class AcosApiProperties {
 
     //getter
     //setter
+}
 ```
 
 ### ➡️ config/RestTemplateConfig.java
@@ -186,7 +187,7 @@ public class ClaimEntity {
 
     //getter
     //setter
-
+}
 ```
 
 ### ➡️ dto/AcosRequest.java
@@ -244,9 +245,7 @@ public class ClaimsController {
     }
 
     @GetMapping("/{claimId}/acos-values")
-    public AcosResponse getAcosValues(
-            @PathVariable String claimId) {
-
+    public AcosResponse getAcosValues(@PathVariable String claimId) {
         return claimsService.fetchAcosValues(claimId);
     }
 }
@@ -266,9 +265,7 @@ public class ClaimsService {
     private final ClaimRepository claimRepository;
     private final AcosClient acosClient;
 
-    public ClaimsService(
-            ClaimRepository claimRepository,
-            AcosClient acosClient) {
+    public ClaimsService(ClaimRepository claimRepository, AcosClient acosClient) {
         this.claimRepository = claimRepository;
         this.acosClient = acosClient;
     }
@@ -276,10 +273,7 @@ public class ClaimsService {
     public AcosResponse fetchAcosValues(String claimId) {
 
         ClaimEntity claim = claimRepository.findByClaimId(claimId)
-                .orElseThrow(() ->
-                        new EntityNotFoundException(
-                                "Claim not found: " + claimId
-                        ));
+                            .orElseThrow(() -> new EntityNotFoundException( "Claim not found: " + claimId));
 
         AcosRequest request = new AcosRequest();
         request.setClaimId(claim.getClaimId());
@@ -293,9 +287,7 @@ public class ClaimsService {
 ### ➡️ repository/ClaimRepository.java
 
 ```java
-public interface ClaimRepository
-        extends JpaRepository<ClaimEntity, Long> {
-
+public interface ClaimRepository extends JpaRepository<ClaimEntity, Long> {
     Optional<ClaimEntity> findByClaimId(String claimId);
 }
 ```
@@ -311,9 +303,7 @@ public class AcosClient {
     private final RestTemplate restTemplate;
     private final AcosApiProperties properties;
 
-    public AcosClient(
-            RestTemplate restTemplate,
-            AcosApiProperties properties) {
+    public AcosClient(RestTemplate restTemplate, AcosApiProperties properties) {
         this.restTemplate = restTemplate;
         this.properties = properties;
     }
@@ -325,11 +315,9 @@ public class AcosClient {
         headers.set("x-api-key", properties.getApiKey());
         headers.set("application-id", properties.getApplicationId());
 
-        HttpEntity<AcosRequest> request =
-                new HttpEntity<>(requestBody, headers);
+        HttpEntity<AcosRequest> request = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<AcosResponse> response =
-                restTemplate.exchange(
+        ResponseEntity<AcosResponse> response = restTemplate.exchange(
                         properties.getBaseUrl() + "/values",
                         HttpMethod.POST,
                         request,
