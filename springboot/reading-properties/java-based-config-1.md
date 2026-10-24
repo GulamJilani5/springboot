@@ -13,9 +13,9 @@
   - DEV, QA and PROD.
 
 ```java
-app.url=https://example.com
-app.username=admin
-app.application-id=my-app-123
+acos.url=https://example.com
+acos.username=admin
+acos.application-id=my-app-123
 ```
 
 ### ➡️ Configuration Object
@@ -24,7 +24,7 @@ app.application-id=my-app-123
 - **Configuration object** = Java object that holds configuration values from `application.properties`.
 
 ```java
-@ConfigurationProperties(prefix = "app")
+@ConfigurationProperties(prefix = "acos")
 public class AppProperties {
 
     private String url;
