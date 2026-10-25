@@ -8,8 +8,8 @@
 
 ```java
 @SpringBootApplication
+@ConfigurationPropertiesScan
 public class Application {
-
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
@@ -22,21 +22,27 @@ public class Application {
 
 - pom.xml
 
-```text
-spring-cloud-azure-starter-keyvault-secrets
+```java
+<dependency>
+    <groupId>com.azure.spring</groupId>
+    <artifactId>spring-cloud-azure-starter-keyvault-secrets</artifactId>
+</dependency>
 ```
 
 - Spring Boot sees this dependency. Because of **AutoConfiguration** (`@EnableAutoConfiguration`).
 - It says: "Azure Key Vault starter is present. Let me configure Azure Key Vault automatically."
 - No code written by developers.
 
-##### 🟦 Step 3: Spring Reads Configuration
+##### 🟦 Step 3: Spring Reads Configuration from application.properties:
 
-- Spring reads from:
-- application.properties:
+```java
+# Azure Key Vault endpoint
+spring.cloud.azure.keyvault.secret.property-sources[0].endpoint=https://<your-vault-name>.vault.azure.net/
 
-```text
-spring.cloud.azure.keyvault.secret.endpoint=...`
+# Map Key Vault secrets to ACOS configuration properties
+acos.api-key=${acos-api-key}
+acos.application-id=${acos-application-id}
+acos.url=${acos-url}
 ```
 
 - Now Spring knows:
@@ -80,75 +86,152 @@ Access Token
 
 ##### 🟦 Step 6: Spring calls Azure Key Vault
 
-- Now Spring has the token.
+- Spring obtains an access token.
+- Spring Cloud Azure uses this token to request secrets from Azure Key Vault.
+
 - It calls
 
 ```text
 GET Secret
 ```
 
-- Azure Key Vault returns
+- Azure Key Vault returns secrets:
 
 ```text
-payment-api-key
-payment-token
-payment-url
+acos-api-key        → actual API key
+acos-application-id → actual application ID
+acos-url            → actual external API URL
 ```
 
 ##### 🟦 Step 7: Spring loads secrets into Environment
 
-- This is the important step.
-- Spring converts `payment-api-key` into `Environment`
+- **Spring Cloud Azure** loads the **Key Vault** secrets into Spring's **Environment**.
+- Environment stores the secret names and their values so Spring can access them.
 - So internally `Environment` like:
 
 ```text
+Spring Environment
 
-payment-api-key = abc123
-
-payment-token = xyz456
-
-payment-url = https://...
+acos-api-key       = actual API key
+acos-application-id = actual application ID
+acos-url           = actual external API URL
 ```
 
 - Now every Spring component can access them.
 
 ##### 🟦 Step 8: ConfigurationProperties binding
 
+- Spring sees **@ConfigurationProperties(prefix = "acos")** and binds `acos.api-key`, `acos.application-id` and `acos.url` to the corresponding fields of **AcosApiProperties**.
+- Our **Service** then accesses the values using ordinary Java getters.
+
 ```java
-@ConfigurationProperties(prefix="payment")
+@ConfigurationProperties(prefix = "acos")
+public class AcosApiProperties {
+
+    private String apiKey;
+    private String applicationId;
+    private String url;
+    // getter
+    // setter
+}
 ```
 
 - It looks inside the Environment.
 
 ```text
-Environment
-
-payment.url
-
-payment.api-key
-
-payment.token
+acos.api-key
+acos.application-id
+acos.url
 ```
 
 - And Matches them
 
 ```text
-private String url;
-
 private String apiKey;
-
-private String token;
+private String applicationId;
+private String url;
 ```
 
-- Creates `PaymentProperties`
+- Creates `AcosApiProperties`
 - and stores it as a Spring Bean.
 
-##### 🟦 Step 9: Service Starts & Business Logic
+##### 🟦 Step 9: config/RestTemplateConfig.java
 
-- Now Spring creates `PaymentService` Constructor Injection `PaymentProperties` is injected.
-- `paymentProperties.getApiKey();`
-- It never talks to Azure.
-- It only talks to the already-created bean.
+```java
+@Configuration
+public class RestTemplateConfig {
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+}
+```
+
+##### 🟦 Step 10: ClaimsService.java
+
+- Handles the business logic and delegates the external API call to AcosClient
+
+```java
+@Service
+public class ClaimsService {
+
+    private final ClaimRepository claimRepository;
+    private final AcosClient acosClient;
+
+    public ClaimsService( ClaimRepository claimRepository, AcosClient acosClient) {
+        this.claimRepository = claimRepository;
+        this.acosClient = acosClient;
+    }
+
+    public AcosResponse fetchAcosValues(String claimId) {
+
+        ClaimEntity claim = claimRepository.findByClaimId(claimId)
+                            .orElseThrow(() -> new EntityNotFoundException( "Claim not found: " + claimId));
+
+        AcosRequest request = new AcosRequest();
+        request.setClaimId(claim.getClaimId());
+        request.setCustomerId(claim.getCustomerId());
+
+        return acosClient.fetchAcosValues(request);
+    }
+}
+```
+
+##### 🟦 Step 11: AcosClient.java
+
+```java
+@Component
+public class AcosClient {
+
+    private final RestTemplate restTemplate;
+    private final AcosApiProperties properties;
+
+    public AcosClient( RestTemplate restTemplate, AcosApiProperties properties) {
+        this.restTemplate = restTemplate;
+        this.properties = properties;
+    }
+
+    public AcosResponse fetchAcosValues(AcosRequest request) {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("x-api-key", properties.getApiKey());
+        headers.set("application-id", properties.getApplicationId());
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<AcosRequest> entity = new HttpEntity<>(request, headers);
+
+        ResponseEntity<AcosResponse> response = restTemplate.exchange(
+                        properties.getUrl(),
+                        HttpMethod.POST,
+                        entity,
+                        AcosResponse.class
+                );
+
+        return response.getBody();
+    }
+}
+```
 
 ### ➡️ Flow
 
